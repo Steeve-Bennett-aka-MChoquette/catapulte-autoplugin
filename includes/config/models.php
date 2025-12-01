@@ -73,44 +73,23 @@ return apply_filters(
 			'grok-2-1212' => 'Grok 2-1212',
 		],
 		'OpenRouter' => [
-			// === GRATUITS - Meilleur rapport qualité-prix ===
-			'deepseek/deepseek-chat-v3-0324:free'          => '⭐ DeepSeek V3 0324 (Gratuit)',
-			'deepseek/deepseek-r1:free'                    => '⭐ DeepSeek R1 Reasoning (Gratuit)',
-			'deepseek/deepseek-r1-0528:free'               => '⭐ DeepSeek R1 0528 (Gratuit)',
-			'qwen/qwen3-coder-480b-a35b-07-25:free'        => '⭐ Qwen3 Coder 480B (Gratuit)',
-			'qwen/qwen3-235b-a22b-04-28:free'              => '⭐ Qwen3 235B (Gratuit)',
-			'meta-llama/llama-4-maverick-17b-128e-instruct:free' => '⭐ Llama 4 Maverick (Gratuit)',
-			'meta-llama/llama-3.3-70b-instruct:free'       => '⭐ Llama 3.3 70B (Gratuit)',
-			'meta-llama/llama-3.1-405b-instruct:free'      => '⭐ Llama 3.1 405B (Gratuit)',
-			'google/gemini-2.0-flash-exp:free'             => '⭐ Gemini 2.0 Flash Exp (Gratuit)',
-			'mistralai/mistral-small-3.2-24b-instruct-2506:free' => '⭐ Mistral Small 3.2 (Gratuit)',
-			'mistralai/mistral-nemo:free'                  => '⭐ Mistral Nemo (Gratuit)',
-			'kwaipilot/kat-coder-pro:free'                 => '⭐ KAT-Coder-Pro (Gratuit)',
-
-			// === ULTRA-BUDGET < $0.10/M input ===
-			'qwen/qwen3-coder-30b-a3b-instruct'            => '💰 Qwen3 Coder 30B',
-			'qwen/qwen3-30b-a3b-04-28'                     => '💰 Qwen3 30B-A3B',
-			'qwen/qwen3-32b-04-28'                         => '💰 Qwen3 32B',
-			'qwen/qwen3-14b-04-28'                         => '💰 Qwen3 14B',
-			'mistralai/mistral-small-3.2-24b-instruct-2506' => '💰 Mistral Small 3.2',
-			'mistralai/devstral-small-2507'                => '💰 Devstral Small (Code)',
+			// === BUDGET - DeepSeek (très économique) ===
+			'deepseek/deepseek-chat-v3-0324'               => '💰 DeepSeek V3 0324',
+			'deepseek/deepseek-chat-v3.1'                  => '💰 DeepSeek V3.1',
+			'deepseek/deepseek-r1'                         => '💰 DeepSeek R1',
+			'deepseek/deepseek-r1-0528'                    => '💰 DeepSeek R1 0528',
 			'deepseek/deepseek-r1-distill-llama-70b'       => '💰 DeepSeek R1 Distill 70B',
-			'deepseek/deepseek-r1-0528-qwen3-8b'           => '💰 DeepSeek R1 Qwen3 8B',
-			'google/gemma-3-27b-it'                        => '💰 Gemma 3 27B',
-			'google/gemma-3-12b-it'                        => '💰 Gemma 3 12B',
-			'google/gemma-3-4b-it'                         => '💰 Gemma 3 4B',
 
-			// === PREMIUM ABORDABLE ===
-			'deepseek/deepseek-chat-v3-0324'               => '🚀 DeepSeek V3 0324',
-			'deepseek/deepseek-v3.2'                       => '🚀 DeepSeek V3.2',
-			'deepseek/deepseek-r1'                         => '🚀 DeepSeek R1',
-			'deepseek/deepseek-r1-0528'                    => '🚀 DeepSeek R1 0528',
-			'qwen/qwen3-coder-480b-a35b-07-25'             => '🚀 Qwen3 Coder 480B',
-			'qwen/qwen3-coder-plus'                        => '🚀 Qwen3 Coder Plus',
-			'qwen/qwen3-235b-a22b-07-25'                   => '🚀 Qwen3 235B',
-			'qwen/qwen3-max'                               => '🚀 Qwen3 Max',
-			'mistralai/codestral-2508'                     => '🚀 Codestral 2508 (Code)',
-			'mistralai/mistral-medium-3.1'                 => '🚀 Mistral Medium 3.1',
+			// === BUDGET - Qwen (économique, excellent pour le code) ===
+			'qwen/qwen3-coder-480b-a35b-07-25'             => '💰 Qwen3 Coder 480B',
+			'qwen/qwen3-coder-plus'                        => '💰 Qwen3 Coder Plus',
+			'qwen/qwen3-coder-30b-a3b-instruct'            => '💰 Qwen3 Coder 30B',
+
+			// === BUDGET - Mistral (économique) ===
+			'mistralai/codestral-2508'                     => '💰 Codestral 2508 (Code)',
+			'mistralai/devstral-small-2507'                => '💰 Devstral Small (Code)',
+			'mistralai/mistral-small-3.2-24b-instruct-2506' => '💰 Mistral Small 3.2',
+			'mistralai/mistral-medium-3.1'                 => '💰 Mistral Medium 3.1',
 			'mistralai/mistral-large-2411'                 => '🚀 Mistral Large',
 
 			// === PREMIUM - Anthropic/OpenAI/Google via OpenRouter ===
