@@ -46,35 +46,43 @@ class OpenRouter_API extends OpenAI_API {
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'deepseek/deepseek-chat-v3.1:free' => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
 			'deepseek/deepseek-r1:free'        => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'qwen/qwen3-coder:free'            => [
+			'deepseek/deepseek-r1-0528:free'   => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-coder-480b-a35b-07-25:free' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 32768,
 			],
-			'qwen/qwq-32b:free'                => [
+			'qwen/qwen3-235b-a22b-04-28:free'  => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'qwen/qwen-2.5-72b-instruct:free'  => [
+			'meta-llama/llama-4-maverick-17b-128e-instruct:free' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'meta-llama/llama-3.3-70b-instruct:free' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'meta-llama/llama-4-maverick:free' => [
+			'meta-llama/llama-3.1-405b-instruct:free' => [
 				'temperature' => 0.2,
-				'max_tokens'  => 16384,
+				'max_tokens'  => 8192,
 			],
-			'meta-llama/llama-4-scout:free'    => [
+			'google/gemini-2.0-flash-exp:free' => [
 				'temperature' => 0.2,
-				'max_tokens'  => 16384,
+				'max_tokens'  => 8192,
 			],
-			'google/gemma-3-27b-it:free'       => [
+			'mistralai/mistral-small-3.2-24b-instruct-2506:free' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'mistralai/mistral-nemo:free'      => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
@@ -82,33 +90,33 @@ class OpenRouter_API extends OpenAI_API {
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'moonshotai/kimi-k2:free'          => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
 
-			// === ULTRA-BUDGET < $0.10/M ===
-			'qwen/qwen-2.5-coder-32b-instruct' => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
-			'qwen/qwen3-30b-a3b'               => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
+			// === ULTRA-BUDGET ===
 			'qwen/qwen3-coder-30b-a3b-instruct' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-30b-a3b-04-28'         => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-32b-04-28'             => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-14b-04-28'             => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
 			],
 			'mistralai/mistral-small-3.2-24b-instruct-2506' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'deepseek/deepseek-r1-distill-llama-70b' => [
+			'mistralai/devstral-small-2507'    => [
 				'temperature' => 0.2,
-				'max_tokens'  => 8192,
+				'max_tokens'  => 16384,
 			],
-			'deepseek/deepseek-r1-distill-llama-8b' => [
+			'deepseek/deepseek-r1-distill-llama-70b' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
@@ -116,29 +124,25 @@ class OpenRouter_API extends OpenAI_API {
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'cohere/command-r7b-12-2024'       => [
-				'temperature' => 0.2,
-				'max_tokens'  => 4096,
-			],
-			'qwen/qwen2.5-coder-7b-instruct'   => [
+			'google/gemma-3-27b-it'            => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'mistralai/devstral-small-1.1'     => [
+			'google/gemma-3-12b-it'            => [
 				'temperature' => 0.2,
-				'max_tokens'  => 16384,
+				'max_tokens'  => 8192,
+			],
+			'google/gemma-3-4b-it'             => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
 			],
 
-			// === PREMIUM ABORDABLE < $0.50/M ===
-			'deepseek/deepseek-chat-v3.1'      => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
+			// === PREMIUM ABORDABLE ===
 			'deepseek/deepseek-chat-v3-0324'   => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'deepseek/deepseek-chat-v3.2'      => [
+			'deepseek/deepseek-v3.2'           => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
@@ -146,37 +150,37 @@ class OpenRouter_API extends OpenAI_API {
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'qwen/qwen3-coder'                 => [
+			'deepseek/deepseek-r1-0528'        => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-coder-480b-a35b-07-25' => [
 				'temperature' => 0.2,
 				'max_tokens'  => 32768,
 			],
-			'qwen/qwen3-235b-a22b'             => [
+			'qwen/qwen3-coder-plus'            => [
+				'temperature' => 0.2,
+				'max_tokens'  => 32768,
+			],
+			'qwen/qwen3-235b-a22b-07-25'       => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'qwen/qwq-32b'                     => [
+			'qwen/qwen3-max'                   => [
 				'temperature' => 0.2,
-				'max_tokens'  => 16384,
-			],
-			'qwen/qwen-2.5-72b-instruct'       => [
-				'temperature' => 0.2,
-				'max_tokens'  => 8192,
-			],
-			'mistralai/codestral-2501'         => [
-				'temperature' => 0.2,
-				'max_tokens'  => 16384,
+				'max_tokens'  => 32768,
 			],
 			'mistralai/codestral-2508'         => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16384,
 			],
-			'deepseek/deepseek-r1-distill-qwen-32b' => [
+			'mistralai/mistral-medium-3.1'     => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'x-ai/grok-code-fast-1'            => [
+			'mistralai/mistral-large-2411'     => [
 				'temperature' => 0.2,
-				'max_tokens'  => 16384,
+				'max_tokens'  => 8192,
 			],
 
 			// === PREMIUM via OpenRouter ===
@@ -200,7 +204,11 @@ class OpenRouter_API extends OpenAI_API {
 				'temperature' => 0.2,
 				'max_tokens'  => 4096,
 			],
-			'google/gemini-pro-1.5'            => [
+			'google/gemini-2.5-pro'            => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'google/gemini-2.5-flash'          => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
