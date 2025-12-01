@@ -39,52 +39,168 @@ class OpenRouter_API extends OpenAI_API {
 		$this->model          = $this->original_model;
 
 		// Set default parameters for OpenRouter models.
+		// Organized by category: Free, Ultra-Budget, Premium Affordable, Premium.
 		$model_params = [
-			'anthropic/claude-sonnet-4'       => [
+			// === GRATUITS ===
+			'deepseek/deepseek-chat-v3-0324:free' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-chat-v3.1:free' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-r1:free'        => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-coder:free'            => [
+				'temperature' => 0.2,
+				'max_tokens'  => 32768,
+			],
+			'qwen/qwq-32b:free'                => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen-2.5-72b-instruct:free'  => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'meta-llama/llama-4-maverick:free' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'meta-llama/llama-4-scout:free'    => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'google/gemma-3-27b-it:free'       => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'kwaipilot/kat-coder-pro:free'     => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'moonshotai/kimi-k2:free'          => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+
+			// === ULTRA-BUDGET < $0.10/M ===
+			'qwen/qwen-2.5-coder-32b-instruct' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-30b-a3b'               => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-coder-30b-a3b-instruct' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'mistralai/mistral-small-3.2-24b-instruct-2506' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'deepseek/deepseek-r1-distill-llama-70b' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'deepseek/deepseek-r1-distill-llama-8b' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'deepseek/deepseek-r1-0528-qwen3-8b' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'cohere/command-r7b-12-2024'       => [
+				'temperature' => 0.2,
+				'max_tokens'  => 4096,
+			],
+			'qwen/qwen2.5-coder-7b-instruct'   => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'mistralai/devstral-small-1.1'     => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+
+			// === PREMIUM ABORDABLE < $0.50/M ===
+			'deepseek/deepseek-chat-v3.1'      => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-chat-v3-0324'   => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-chat-v3.2'      => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-r1'             => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen3-coder'                 => [
+				'temperature' => 0.2,
+				'max_tokens'  => 32768,
+			],
+			'qwen/qwen3-235b-a22b'             => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwq-32b'                     => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'qwen/qwen-2.5-72b-instruct'       => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'mistralai/codestral-2501'         => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'mistralai/codestral-2508'         => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+			'deepseek/deepseek-r1-distill-qwen-32b' => [
+				'temperature' => 0.2,
+				'max_tokens'  => 8192,
+			],
+			'x-ai/grok-code-fast-1'            => [
+				'temperature' => 0.2,
+				'max_tokens'  => 16384,
+			],
+
+			// === PREMIUM via OpenRouter ===
+			'anthropic/claude-sonnet-4'        => [
 				'temperature' => 0.2,
 				'max_tokens'  => 16000,
 			],
-			'anthropic/claude-3.5-sonnet'     => [
+			'anthropic/claude-3.5-sonnet'      => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
-			'anthropic/claude-3-opus'         => [
+			'anthropic/claude-3-opus'          => [
 				'temperature' => 0.2,
 				'max_tokens'  => 4096,
 			],
-			'openai/gpt-4o'                   => [
+			'openai/gpt-4o'                    => [
 				'temperature' => 0.2,
 				'max_tokens'  => 4096,
 			],
-			'openai/gpt-4o-mini'              => [
+			'openai/gpt-4o-mini'               => [
 				'temperature' => 0.2,
 				'max_tokens'  => 4096,
 			],
-			'google/gemini-pro-1.5'           => [
-				'temperature' => 0.2,
-				'max_tokens'  => 8192,
-			],
-			'google/gemini-flash-1.5'         => [
-				'temperature' => 0.2,
-				'max_tokens'  => 8192,
-			],
-			'meta-llama/llama-3.1-405b-instruct' => [
-				'temperature' => 0.2,
-				'max_tokens'  => 4096,
-			],
-			'meta-llama/llama-3.1-70b-instruct' => [
-				'temperature' => 0.2,
-				'max_tokens'  => 4096,
-			],
-			'mistralai/mistral-large'         => [
-				'temperature' => 0.2,
-				'max_tokens'  => 4096,
-			],
-			'deepseek/deepseek-chat'          => [
-				'temperature' => 0.2,
-				'max_tokens'  => 8192,
-			],
-			'qwen/qwen-2.5-coder-32b-instruct' => [
+			'google/gemini-pro-1.5'            => [
 				'temperature' => 0.2,
 				'max_tokens'  => 8192,
 			],
