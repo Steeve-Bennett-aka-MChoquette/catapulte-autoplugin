@@ -13,6 +13,7 @@ use WP_Autoplugin\OpenAI_Responses_API;
 use WP_Autoplugin\Anthropic_API;
 use WP_Autoplugin\Google_Gemini_API;
 use WP_Autoplugin\XAI_API;
+use WP_Autoplugin\OpenRouter_API;
 use WP_Autoplugin\Custom_API;
 use WP_Autoplugin\Admin\Admin;
 
@@ -48,11 +49,12 @@ class Api_Handler {
 	 * @return API|null
 	 */
 	public function get_api( $model ) {
-		$openai_api_key    = get_option( 'wp_autoplugin_openai_api_key' );
-		$anthropic_api_key = get_option( 'wp_autoplugin_anthropic_api_key' );
-		$google_api_key    = get_option( 'wp_autoplugin_google_api_key' );
-		$xai_api_key       = get_option( 'wp_autoplugin_xai_api_key' );
-		$custom_models     = get_option( 'wp_autoplugin_custom_models', [] );
+		$openai_api_key     = get_option( 'wp_autoplugin_openai_api_key' );
+		$anthropic_api_key  = get_option( 'wp_autoplugin_anthropic_api_key' );
+		$google_api_key     = get_option( 'wp_autoplugin_google_api_key' );
+		$xai_api_key        = get_option( 'wp_autoplugin_xai_api_key' );
+		$openrouter_api_key = get_option( 'wp_autoplugin_openrouter_api_key' );
+		$custom_models      = get_option( 'wp_autoplugin_custom_models', [] );
 
 		$api = null;
 
@@ -75,6 +77,10 @@ class Api_Handler {
 		} elseif ( ! empty( $xai_api_key ) && array_key_exists( $model, Admin::get_models()['xAI'] ) ) {
 			$api = new XAI_API();
 			$api->set_api_key( $xai_api_key );
+			$api->set_model( $model );
+		} elseif ( ! empty( $openrouter_api_key ) && array_key_exists( $model, Admin::get_models()['OpenRouter'] ) ) {
+			$api = new OpenRouter_API();
+			$api->set_api_key( $openrouter_api_key );
 			$api->set_model( $model );
 		}
 

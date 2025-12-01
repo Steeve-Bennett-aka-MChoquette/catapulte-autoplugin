@@ -33,6 +33,7 @@ class Settings {
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_anthropic_api_key' );
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_google_api_key' );
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_xai_api_key' );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openrouter_api_key' );
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_model' );
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_planner_model' );
 		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_coder_model' );

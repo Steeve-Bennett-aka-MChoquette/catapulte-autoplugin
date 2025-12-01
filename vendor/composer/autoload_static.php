@@ -35,6 +35,7 @@ class ComposerStaticInit62b8c0a821dc44c3b86fc9def1bcbee9
         'WP_Autoplugin\\Hooks_Extender' => __DIR__ . '/../..' . '/includes/class-hooks-extender.php',
         'WP_Autoplugin\\OpenAI_API' => __DIR__ . '/../..' . '/includes/api/class-openai-api.php',
         'WP_Autoplugin\\OpenAI_Responses_API' => __DIR__ . '/../..' . '/includes/api/class-openai-responses-api.php',
+        'WP_Autoplugin\\OpenRouter_API' => __DIR__ . '/../..' . '/includes/api/class-openrouter-api.php',
         'WP_Autoplugin\\Plugin_Explainer' => __DIR__ . '/../..' . '/includes/class-plugin-explainer.php',
         'WP_Autoplugin\\Plugin_Extender' => __DIR__ . '/../..' . '/includes/class-plugin-extender.php',
         'WP_Autoplugin\\Plugin_Fixer' => __DIR__ . '/../..' . '/includes/class-plugin-fixer.php',

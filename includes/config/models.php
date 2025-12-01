@@ -65,12 +65,26 @@ return apply_filters(
 			'gemini-1.5-flash'      => 'Gemini 1.5 Flash',
 			'gemma-3-27b-it'        => 'Gemma 3 27B',
 		],
-		'xAI'       => [
+		'xAI'        => [
 			'grok-4'      => 'Grok 4 (Latest)',
 			'grok-4-0709' => 'Grok 4-0709',
 			'grok-3'      => 'Grok 3',
 			'grok-3-mini' => 'Grok 3 Mini',
 			'grok-2-1212' => 'Grok 2-1212',
+		],
+		'OpenRouter' => [
+			'anthropic/claude-sonnet-4'          => 'Claude Sonnet 4',
+			'anthropic/claude-3.5-sonnet'        => 'Claude 3.5 Sonnet',
+			'anthropic/claude-3-opus'            => 'Claude 3 Opus',
+			'openai/gpt-4o'                      => 'GPT-4o',
+			'openai/gpt-4o-mini'                 => 'GPT-4o Mini',
+			'google/gemini-pro-1.5'              => 'Gemini Pro 1.5',
+			'google/gemini-flash-1.5'            => 'Gemini Flash 1.5',
+			'meta-llama/llama-3.1-405b-instruct' => 'Llama 3.1 405B',
+			'meta-llama/llama-3.1-70b-instruct'  => 'Llama 3.1 70B',
+			'mistralai/mistral-large'            => 'Mistral Large',
+			'deepseek/deepseek-chat'             => 'DeepSeek Chat',
+			'qwen/qwen-2.5-coder-32b-instruct'   => 'Qwen 2.5 Coder 32B',
 		],
 	]
 );

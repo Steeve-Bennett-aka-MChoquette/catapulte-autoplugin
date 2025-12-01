@@ -34,6 +34,7 @@ return array(
     'WP_Autoplugin\\Hooks_Extender' => $baseDir . '/includes/class-hooks-extender.php',
     'WP_Autoplugin\\OpenAI_API' => $baseDir . '/includes/api/class-openai-api.php',
     'WP_Autoplugin\\OpenAI_Responses_API' => $baseDir . '/includes/api/class-openai-responses-api.php',
+    'WP_Autoplugin\\OpenRouter_API' => $baseDir . '/includes/api/class-openrouter-api.php',
     'WP_Autoplugin\\Plugin_Explainer' => $baseDir . '/includes/class-plugin-explainer.php',
     'WP_Autoplugin\\Plugin_Extender' => $baseDir . '/includes/class-plugin-extender.php',
     'WP_Autoplugin\\Plugin_Fixer' => $baseDir . '/includes/class-plugin-fixer.php',

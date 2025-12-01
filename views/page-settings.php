@@ -44,6 +44,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<th scope="row"><?php esc_html_e( 'xAI API Key', 'wp-autoplugin' ); ?></th>
 				<td><input type="password" name="wp_autoplugin_xai_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_xai_api_key' ) ); ?>" class="large-text" /></td>
 			</tr>
+			<tr valign="top">
+				<th scope="row"><?php esc_html_e( 'OpenRouter API Key', 'wp-autoplugin' ); ?></th>
+				<td><input type="password" name="wp_autoplugin_openrouter_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_openrouter_api_key' ) ); ?>" class="large-text" /></td>
+			</tr>
 <?php
 function render_model_dropdown( $name, $selected_value ) {
 	$models        = Admin::get_models();
