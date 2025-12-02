@@ -138,6 +138,12 @@ class GitHub_Updater {
 	 * @return void
 	 */
 	public function set_defaults() {
+		// Default readme file to probe when fetching sections.
+		// Must be set before get_new_version() is called.
+		if ( empty( $this->config['readme'] ) ) {
+			$this->config['readme'] = 'readme.txt';
+		}
+
 		if ( ! isset( $this->config['new_version'] ) ) {
 			$this->config['new_version'] = $this->get_new_version();
 		}
@@ -149,11 +155,6 @@ class GitHub_Updater {
 		// Keep a short text fallback from GitHub API for description.
 		if ( ! isset( $this->config['description'] ) ) {
 			$this->config['description'] = $this->get_description_text_from_github();
-		}
-
-		// Default readme file to probe when fetching sections.
-		if ( empty( $this->config['readme'] ) ) {
-			$this->config['readme'] = 'readme.txt';
 		}
 
 		$plugin_data = $this->get_plugin_data();
