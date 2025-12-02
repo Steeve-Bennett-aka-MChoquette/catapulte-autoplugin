@@ -506,6 +506,9 @@ class Plugin_Installer {
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			WP_Filesystem();
 		}
+		if ( ! $wp_filesystem instanceof \WP_Filesystem_Base ) {
+			throw new \RuntimeException( __( 'Failed to initialize WordPress filesystem.', 'wp-autoplugin' ) );
+		}
 		return $wp_filesystem;
 	}
 

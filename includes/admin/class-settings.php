@@ -30,16 +30,79 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function register_settings() {
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openai_api_key' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_anthropic_api_key' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_google_api_key' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_xai_api_key' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openrouter_api_key' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_model' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_planner_model' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_coder_model' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_reviewer_model' );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_plugin_mode' );
+	public function register_settings(): void {
+		// API keys - preserve existing value if empty submitted.
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openai_api_key', [
+			'type'              => 'string',
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_openai_api_key' ),
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_anthropic_api_key', [
+			'type'              => 'string',
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_anthropic_api_key' ),
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_google_api_key', [
+			'type'              => 'string',
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_google_api_key' ),
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_xai_api_key', [
+			'type'              => 'string',
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_xai_api_key' ),
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openrouter_api_key', [
+			'type'              => 'string',
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_openrouter_api_key' ),
+		] );
+
+		// Model settings - sanitize as text fields.
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_model', [
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_planner_model', [
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_coder_model', [
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+		] );
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_reviewer_model', [
+			'type'              => 'string',
+			'sanitize_callback' => 'sanitize_text_field',
+		] );
+
+		// Plugin mode - validate against allowed values.
+		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_plugin_mode', [
+			'type'              => 'string',
+			'sanitize_callback' => [ $this, 'sanitize_plugin_mode' ],
+		] );
+	}
+
+	/**
+	 * Sanitize the plugin mode setting.
+	 *
+	 * @param mixed $value The value to sanitize.
+	 * @return string The sanitized value.
+	 */
+	public function sanitize_plugin_mode( mixed $value ): string {
+		$allowed = [ 'simple', 'complex' ];
+		$value   = sanitize_text_field( (string) $value );
+		return in_array( $value, $allowed, true ) ? $value : 'simple';
+	}
+
+	/**
+	 * Sanitize an API key, preserving existing value if empty.
+	 *
+	 * @param mixed  $value      The submitted value.
+	 * @param string $option_name The option name for retrieving existing value.
+	 * @return string The sanitized API key.
+	 */
+	private function sanitize_api_key( mixed $value, string $option_name ): string {
+		$value = sanitize_text_field( (string) $value );
+		// If empty, preserve existing key.
+		if ( empty( $value ) ) {
+			return (string) get_option( $option_name, '' );
+		}
+		return $value;
 	}
 }

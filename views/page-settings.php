@@ -27,26 +27,80 @@ if ( ! defined( 'ABSPATH' ) ) {
 		settings_fields( 'wp_autoplugin_settings' );
 		do_settings_sections( 'wp_autoplugin_settings' );
 		?>
+		<?php
+		/**
+		 * Mask an API key for display - shows only last 4 characters.
+		 *
+		 * @param string $key The API key to mask.
+		 * @return string The masked key or empty string.
+		 */
+		function wp_autoplugin_mask_api_key( string $key ): string {
+			if ( empty( $key ) ) {
+				return '';
+			}
+			return str_repeat( '*', 8 ) . substr( $key, -4 );
+		}
+		?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'OpenAI API Key', 'wp-autoplugin' ); ?></th>
-				<td><input type="password" name="wp_autoplugin_openai_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_openai_api_key' ) ); ?>" class="large-text" /></td>
+				<td>
+					<input type="password" name="wp_autoplugin_openai_api_key" value="" class="large-text" autocomplete="new-password" />
+					<?php
+					$openai_key = get_option( 'wp_autoplugin_openai_api_key' );
+					if ( $openai_key ) :
+					?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Current: %s', 'wp-autoplugin' ), wp_autoplugin_mask_api_key( $openai_key ) ) ); ?></p>
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Anthropic API Key', 'wp-autoplugin' ); ?></th>
-				<td><input type="password" name="wp_autoplugin_anthropic_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_anthropic_api_key' ) ); ?>" class="large-text" /></td>
+				<td>
+					<input type="password" name="wp_autoplugin_anthropic_api_key" value="" class="large-text" autocomplete="new-password" />
+					<?php
+					$anthropic_key = get_option( 'wp_autoplugin_anthropic_api_key' );
+					if ( $anthropic_key ) :
+					?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Current: %s', 'wp-autoplugin' ), wp_autoplugin_mask_api_key( $anthropic_key ) ) ); ?></p>
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Google Gemini API Key', 'wp-autoplugin' ); ?></th>
-				<td><input type="password" name="wp_autoplugin_google_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_google_api_key' ) ); ?>" class="large-text" /></td>
+				<td>
+					<input type="password" name="wp_autoplugin_google_api_key" value="" class="large-text" autocomplete="new-password" />
+					<?php
+					$google_key = get_option( 'wp_autoplugin_google_api_key' );
+					if ( $google_key ) :
+					?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Current: %s', 'wp-autoplugin' ), wp_autoplugin_mask_api_key( $google_key ) ) ); ?></p>
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'xAI API Key', 'wp-autoplugin' ); ?></th>
-				<td><input type="password" name="wp_autoplugin_xai_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_xai_api_key' ) ); ?>" class="large-text" /></td>
+				<td>
+					<input type="password" name="wp_autoplugin_xai_api_key" value="" class="large-text" autocomplete="new-password" />
+					<?php
+					$xai_key = get_option( 'wp_autoplugin_xai_api_key' );
+					if ( $xai_key ) :
+					?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Current: %s', 'wp-autoplugin' ), wp_autoplugin_mask_api_key( $xai_key ) ) ); ?></p>
+					<?php endif; ?>
+				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'OpenRouter API Key', 'wp-autoplugin' ); ?></th>
-				<td><input type="password" name="wp_autoplugin_openrouter_api_key" value="<?php echo esc_attr( get_option( 'wp_autoplugin_openrouter_api_key' ) ); ?>" class="large-text" /></td>
+				<td>
+					<input type="password" name="wp_autoplugin_openrouter_api_key" value="" class="large-text" autocomplete="new-password" />
+					<?php
+					$openrouter_key = get_option( 'wp_autoplugin_openrouter_api_key' );
+					if ( $openrouter_key ) :
+					?>
+						<p class="description"><?php echo esc_html( sprintf( __( 'Current: %s', 'wp-autoplugin' ), wp_autoplugin_mask_api_key( $openrouter_key ) ) ); ?></p>
+					<?php endif; ?>
+				</td>
 			</tr>
 <?php
 function render_model_dropdown( $name, $selected_value ) {
