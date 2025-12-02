@@ -3,26 +3,26 @@
 declare(strict_types=1);
 
 /**
- * WP-Autoplugin API Handler class.
+ * Catapulte-Autoplugin API Handler class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
-use WP_Autoplugin\API;
-use WP_Autoplugin\OpenAI_API;
-use WP_Autoplugin\OpenAI_Responses_API;
-use WP_Autoplugin\Anthropic_API;
-use WP_Autoplugin\Google_Gemini_API;
-use WP_Autoplugin\XAI_API;
-use WP_Autoplugin\OpenRouter_API;
-use WP_Autoplugin\Custom_API;
+use Catapulte_Autoplugin\API;
+use Catapulte_Autoplugin\OpenAI_API;
+use Catapulte_Autoplugin\OpenAI_Responses_API;
+use Catapulte_Autoplugin\Anthropic_API;
+use Catapulte_Autoplugin\Google_Gemini_API;
+use Catapulte_Autoplugin\XAI_API;
+use Catapulte_Autoplugin\OpenRouter_API;
+use Catapulte_Autoplugin\Custom_API;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,7 +42,7 @@ class Api_Handler {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$model        = (string) get_option( 'wp_autoplugin_model', '' );
+		$model        = (string) get_option( 'catapulte_autoplugin_model', '' );
 		$this->ai_api = $this->get_api( $model );
 	}
 
@@ -50,12 +50,12 @@ class Api_Handler {
 	 * Get the API object based on the selected model or a custom model.
 	 */
 	public function get_api( string $model ): ?API {
-		$openai_api_key     = (string) get_option( 'wp_autoplugin_openai_api_key', '' );
-		$anthropic_api_key  = (string) get_option( 'wp_autoplugin_anthropic_api_key', '' );
-		$google_api_key     = (string) get_option( 'wp_autoplugin_google_api_key', '' );
-		$xai_api_key        = (string) get_option( 'wp_autoplugin_xai_api_key', '' );
-		$openrouter_api_key = (string) get_option( 'wp_autoplugin_openrouter_api_key', '' );
-		$custom_models      = get_option( 'wp_autoplugin_custom_models', [] );
+		$openai_api_key     = (string) get_option( 'catapulte_autoplugin_openai_api_key', '' );
+		$anthropic_api_key  = (string) get_option( 'catapulte_autoplugin_anthropic_api_key', '' );
+		$google_api_key     = (string) get_option( 'catapulte_autoplugin_google_api_key', '' );
+		$xai_api_key        = (string) get_option( 'catapulte_autoplugin_xai_api_key', '' );
+		$openrouter_api_key = (string) get_option( 'catapulte_autoplugin_openrouter_api_key', '' );
+		$custom_models      = get_option( 'catapulte_autoplugin_custom_models', [] );
 
 		$models = Admin::get_models();
 
@@ -159,24 +159,24 @@ class Api_Handler {
 	 * Get the planner model or fall back to default model.
 	 */
 	public function get_planner_model(): string {
-		$planner_model = (string) get_option( 'wp_autoplugin_planner_model', '' );
-		return $planner_model !== '' ? $planner_model : (string) get_option( 'wp_autoplugin_model', '' );
+		$planner_model = (string) get_option( 'catapulte_autoplugin_planner_model', '' );
+		return $planner_model !== '' ? $planner_model : (string) get_option( 'catapulte_autoplugin_model', '' );
 	}
 
 	/**
 	 * Get the coder model or fall back to default model.
 	 */
 	public function get_coder_model(): string {
-		$coder_model = (string) get_option( 'wp_autoplugin_coder_model', '' );
-		return $coder_model !== '' ? $coder_model : (string) get_option( 'wp_autoplugin_model', '' );
+		$coder_model = (string) get_option( 'catapulte_autoplugin_coder_model', '' );
+		return $coder_model !== '' ? $coder_model : (string) get_option( 'catapulte_autoplugin_model', '' );
 	}
 
 	/**
 	 * Get the reviewer model or fall back to default model.
 	 */
 	public function get_reviewer_model(): string {
-		$reviewer_model = (string) get_option( 'wp_autoplugin_reviewer_model', '' );
-		return $reviewer_model !== '' ? $reviewer_model : (string) get_option( 'wp_autoplugin_model', '' );
+		$reviewer_model = (string) get_option( 'catapulte_autoplugin_reviewer_model', '' );
+		return $reviewer_model !== '' ? $reviewer_model : (string) get_option( 'catapulte_autoplugin_model', '' );
 	}
 
 	/**
@@ -206,17 +206,17 @@ class Api_Handler {
 	public function get_next_task_model(): string {
 		$screen = get_current_screen();
 		if ( $screen === null ) {
-			return (string) get_option( 'wp_autoplugin_model', '' );
+			return (string) get_option( 'catapulte_autoplugin_model', '' );
 		}
 
 		return match ( $screen->id ) {
-			'wp-autoplugin_page_wp-autoplugin-generate',
-			'admin_page_wp-autoplugin-fix',
-			'admin_page_wp-autoplugin-extend',
-			'admin_page_wp-autoplugin-extend-hooks',
-			'admin_page_wp-autoplugin-extend-theme' => $this->get_planner_model(),
-			'admin_page_wp-autoplugin-explain'      => $this->get_reviewer_model(),
-			default                                 => (string) get_option( 'wp_autoplugin_model', '' ),
+			'catapulte-autoplugin_page_catapulte-autoplugin-generate',
+			'admin_page_catapulte-autoplugin-fix',
+			'admin_page_catapulte-autoplugin-extend',
+			'admin_page_catapulte-autoplugin-extend-hooks',
+			'admin_page_catapulte-autoplugin-extend-theme' => $this->get_planner_model(),
+			'admin_page_catapulte-autoplugin-explain'      => $this->get_reviewer_model(),
+			default                                 => (string) get_option( 'catapulte_autoplugin_model', '' ),
 		};
 	}
 }

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin AJAX Model class.
+ * Catapulte-Autoplugin AJAX Model class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Admin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,18 +42,18 @@ class Model {
 	 */
 	public function add_model(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
-		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+		if ( ! check_ajax_referer( 'catapulte_autoplugin_nonce', 'nonce', false ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
 		$model = isset( $_POST['model'] ) && is_array( $_POST['model'] ) ? wp_unslash( $_POST['model'] ) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization is done later, see below.
 		if ( ! $model || ! isset( $model['name'] ) || ! isset( $model['url'] ) || ! isset( $model['apiKey'] ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model data.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model data.', 'catapulte-autoplugin' ) ] );
 		}
 
 		$new_model = [
@@ -66,18 +66,18 @@ class Model {
 				: [],
 		];
 
-		$models = get_option( 'wp_autoplugin_custom_models', [] );
+		$models = get_option( 'catapulte_autoplugin_custom_models', [] );
 		if ( ! is_array( $models ) ) {
 			$models = [];
 		}
 
 		$models[] = $new_model;
-		update_option( 'wp_autoplugin_custom_models', $models );
+		update_option( 'catapulte_autoplugin_custom_models', $models );
 
 		wp_send_json_success(
 			[
 				'models'  => $models,
-				'message' => esc_html__( 'Model added successfully.', 'wp-autoplugin' ),
+				'message' => esc_html__( 'Model added successfully.', 'catapulte-autoplugin' ),
 			]
 		);
 	}
@@ -89,35 +89,35 @@ class Model {
 	 */
 	public function remove_model(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
-		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+		if ( ! check_ajax_referer( 'catapulte_autoplugin_nonce', 'nonce', false ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
-		$models = get_option( 'wp_autoplugin_custom_models', [] );
+		$models = get_option( 'catapulte_autoplugin_custom_models', [] );
 		if ( ! is_array( $models ) ) {
 			$models = [];
 		}
 
 		$index = isset( $_POST['index'] ) ? intval( wp_unslash( $_POST['index'] ) ) : null;
 		if ( ! is_int( $index ) || $index >= count( $models ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model index.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model index.', 'catapulte-autoplugin' ) ] );
 		}
 
 		if ( isset( $models[ $index ] ) ) {
 			unset( $models[ $index ] );
 		}
 
-		update_option( 'wp_autoplugin_custom_models', $models );
+		update_option( 'catapulte_autoplugin_custom_models', $models );
 
 		wp_send_json_success(
 			[
 				'models'  => $models,
-				'message' => esc_html__( 'Model removed successfully.', 'wp-autoplugin' ),
+				'message' => esc_html__( 'Model removed successfully.', 'catapulte-autoplugin' ),
 			]
 		);
 	}
@@ -129,25 +129,25 @@ class Model {
 	 */
 	public function change_model(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
-		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+		if ( ! check_ajax_referer( 'catapulte_autoplugin_nonce', 'nonce', false ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
 		$model = isset( $_POST['model'] ) ? sanitize_text_field( wp_unslash( $_POST['model'] ) ) : '';
 		if ( empty( $model ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'No model specified.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'No model specified.', 'catapulte-autoplugin' ) ] );
 		}
 
 		// Validate the model exists in one of the providers or custom models.
 		$valid_model = false;
 
 		// Check built-in models.
-		foreach ( \WP_Autoplugin\Admin\Admin::get_models() as $provider => $models ) {
+		foreach ( \Catapulte_Autoplugin\Admin\Admin::get_models() as $provider => $models ) {
 			if ( array_key_exists( $model, $models ) ) {
 				$valid_model = true;
 				break;
@@ -156,7 +156,7 @@ class Model {
 
 		// Check custom models.
 		if ( ! $valid_model ) {
-			$custom_models = get_option( 'wp_autoplugin_custom_models', [] );
+			$custom_models = get_option( 'catapulte_autoplugin_custom_models', [] );
 			foreach ( $custom_models as $custom_model ) {
 				if ( $custom_model['name'] === $model ) {
 					$valid_model = true;
@@ -166,13 +166,13 @@ class Model {
 		}
 
 		if ( ! $valid_model ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model specified.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Invalid model specified.', 'catapulte-autoplugin' ) ] );
 		}
 
 		// Update the model setting.
-		update_option( 'wp_autoplugin_model', $model );
+		update_option( 'catapulte_autoplugin_model', $model );
 
-		wp_send_json_success( [ 'message' => esc_html__( 'Model changed successfully.', 'wp-autoplugin' ) ] );
+		wp_send_json_success( [ 'message' => esc_html__( 'Model changed successfully.', 'catapulte-autoplugin' ) ] );
 	}
 
 	/**
@@ -182,12 +182,12 @@ class Model {
 	 */
 	public function change_models(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
-		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+		if ( ! check_ajax_referer( 'catapulte_autoplugin_nonce', 'nonce', false ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) ] );
 			exit;
 		}
 
@@ -197,7 +197,7 @@ class Model {
 		$reviewer_model = isset( $_POST['reviewer_model'] ) ? sanitize_text_field( wp_unslash( $_POST['reviewer_model'] ) ) : '';
 
 		if ( empty( $default_model ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'Default model is required.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Default model is required.', 'catapulte-autoplugin' ) ] );
 		}
 
 		// Validate all non-empty models.
@@ -206,7 +206,7 @@ class Model {
 			$valid_model = false;
 
 			// Check built-in models.
-			foreach ( \WP_Autoplugin\Admin\Admin::get_models() as $provider => $models ) {
+			foreach ( \Catapulte_Autoplugin\Admin\Admin::get_models() as $provider => $models ) {
 				if ( array_key_exists( $model, $models ) ) {
 					$valid_model = true;
 					break;
@@ -215,7 +215,7 @@ class Model {
 
 			// Check custom models.
 			if ( ! $valid_model ) {
-				$custom_models = get_option( 'wp_autoplugin_custom_models', [] );
+				$custom_models = get_option( 'catapulte_autoplugin_custom_models', [] );
 				foreach ( $custom_models as $custom_model ) {
 					if ( $custom_model['name'] === $model ) {
 						$valid_model = true;
@@ -226,16 +226,16 @@ class Model {
 
 			if ( ! $valid_model ) {
 				// Translators: %s: model name.
-				wp_send_json_error( [ 'message' => sprintf( esc_html__( 'Invalid model specified: %s', 'wp-autoplugin' ), $model ) ] );
+				wp_send_json_error( [ 'message' => sprintf( esc_html__( 'Invalid model specified: %s', 'catapulte-autoplugin' ), $model ) ] );
 			}
 		}
 
 		// Update all model settings.
-		update_option( 'wp_autoplugin_model', $default_model );
-		update_option( 'wp_autoplugin_planner_model', $planner_model );
-		update_option( 'wp_autoplugin_coder_model', $coder_model );
-		update_option( 'wp_autoplugin_reviewer_model', $reviewer_model );
+		update_option( 'catapulte_autoplugin_model', $default_model );
+		update_option( 'catapulte_autoplugin_planner_model', $planner_model );
+		update_option( 'catapulte_autoplugin_coder_model', $coder_model );
+		update_option( 'catapulte_autoplugin_reviewer_model', $reviewer_model );
 
-		wp_send_json_success( [ 'message' => esc_html__( 'Models updated successfully.', 'wp-autoplugin' ) ] );
+		wp_send_json_success( [ 'message' => esc_html__( 'Models updated successfully.', 'catapulte-autoplugin' ) ] );
 	}
 }

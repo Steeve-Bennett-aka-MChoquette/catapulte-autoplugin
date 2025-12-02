@@ -4,15 +4,15 @@ declare(strict_types=1);
 /**
  * Autoplugin Hooks Extender class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -58,7 +58,7 @@ class Hooks_Extender {
 			$hooks_list .= "```\n{$hook['type']}: '{$hook['name']}'\n\nContext:\n{$hook['context']}\n```\n\n";
 		}
 
-		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
+		$plugin_mode = get_option( 'catapulte_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
 			$prompt = <<<PROMPT
@@ -167,7 +167,7 @@ class Hooks_Extender {
 
 			Do not use Markdown formatting in your answer. Ensure the response does not contain any explanation or commentary, ONLY the complete, working code without any placeholders. "Add X here" comments are not allowed in the code, you need to write out the full, working code.
 
-			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "WP-Autoplugin" for the Author of the plugin, with Author URI: https://wp-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
+			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "Catapulte-Autoplugin" for the Author of the plugin, with Author URI: https://catapulte-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
 			PROMPT;
 
 		$plan_data = $this->ai_api->send_prompt( $prompt );
@@ -190,10 +190,10 @@ class Hooks_Extender {
 		}
 
 		if ( empty( $hooks_list ) ) {
-			$hooks_list = esc_html__( '(No custom hooks found in the theme code.)', 'wp-autoplugin' );
+			$hooks_list = esc_html__( '(No custom hooks found in the theme code.)', 'catapulte-autoplugin' );
 		}
 
-		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
+		$plugin_mode = get_option( 'catapulte_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
 			$prompt = <<<PROMPT
@@ -302,7 +302,7 @@ class Hooks_Extender {
 
 			Do not use Markdown formatting in your answer. Ensure the response does not contain any explanation or commentary, ONLY the complete, working code without any placeholders. "Add X here" comments are not allowed in the code, you need to write out the full, working code.
 
-			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "WP-Autoplugin" for the Author of the plugin, with Author URI: https://wp-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
+			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "Catapulte-Autoplugin" for the Author of the plugin, with Author URI: https://catapulte-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
 			PROMPT;
 
 		$plugin_code = $this->ai_api->send_prompt( $prompt );
@@ -639,7 +639,7 @@ class Hooks_Extender {
 	 * @return array|null Custom config array or null if none exists.
 	 */
 	private static function get_extraction_config( $plugin_slug ) {
-		$configs = apply_filters( 'wp_autoplugin_hook_extraction_config', [] );
+		$configs = apply_filters( 'catapulte_autoplugin_hook_extraction_config', [] );
 		return isset( $configs[ $plugin_slug ] ) ? $configs[ $plugin_slug ] : null;
 	}
 
@@ -699,7 +699,7 @@ class Hooks_Extender {
 
 			// Filter the number of context lines.
 			$context_lines_count = apply_filters(
-				'wp_autoplugin_hook_context_lines',
+				'catapulte_autoplugin_hook_context_lines',
 				self::DEFAULT_CONTEXT_LINES
 			);
 

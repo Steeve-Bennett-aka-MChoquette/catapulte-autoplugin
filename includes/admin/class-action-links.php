@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin Action Links class.
+ * Catapulte-Autoplugin Action Links class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,7 +25,7 @@ class Action_Links {
 		add_filter( 'plugin_action_links', [ $this, 'add_extend_plugin_link' ], 20, 2 );
 		add_action( 'admin_enqueue_scripts', [ $this, 'add_extend_theme_action_links' ] );
 		add_filter( 'theme_action_links', [ $this, 'add_extend_theme_link' ], 20, 2 );
-		add_filter( 'wp_autoplugin_hook_extraction_config', [ $this, 'add_rank_math_hook_extraction_config' ] );
+		add_filter( 'catapulte_autoplugin_hook_extraction_config', [ $this, 'add_rank_math_hook_extraction_config' ] );
 	}
 
 	/**
@@ -37,15 +37,15 @@ class Action_Links {
 	 * @return array
 	 */
 	public function add_extend_plugin_link( $actions, $plugin_file ) {
-		$autoplugins = get_option( 'wp_autoplugins', [] );
+		$autoplugins = get_option( 'catapulte_autoplugins', [] );
 		if ( in_array( $plugin_file, $autoplugins, true ) ) {
-			$extend_url = admin_url( 'admin.php?page=wp-autoplugin-extend&plugin=' . rawurlencode( $plugin_file ) );
-			$extend_url = wp_nonce_url( $extend_url, 'wp-autoplugin-extend-plugin', 'nonce' );
-			$link_text  = esc_html__( 'Modify (Patch)', 'wp-autoplugin' );
+			$extend_url = admin_url( 'admin.php?page=catapulte-autoplugin-extend&plugin=' . rawurlencode( $plugin_file ) );
+			$extend_url = wp_nonce_url( $extend_url, 'catapulte-autoplugin-extend-plugin', 'nonce' );
+			$link_text  = esc_html__( 'Modify (Patch)', 'catapulte-autoplugin' );
 		} else {
-			$extend_url = admin_url( 'admin.php?page=wp-autoplugin-extend-hooks&plugin=' . rawurlencode( $plugin_file ) );
-			$extend_url = wp_nonce_url( $extend_url, 'wp-autoplugin-extend-hooks', 'nonce' );
-			$link_text  = esc_html__( 'Create Extension', 'wp-autoplugin' );
+			$extend_url = admin_url( 'admin.php?page=catapulte-autoplugin-extend-hooks&plugin=' . rawurlencode( $plugin_file ) );
+			$extend_url = wp_nonce_url( $extend_url, 'catapulte-autoplugin-extend-hooks', 'nonce' );
+			$link_text  = esc_html__( 'Create Extension', 'catapulte-autoplugin' );
 		}
 		$actions['extend_plugin'] = '<a href="' . esc_url( $extend_url ) . '">' . $link_text . '</a>';
 		return $actions;
@@ -60,9 +60,9 @@ class Action_Links {
 	 * @return array
 	 */
 	public function add_extend_theme_link( $actions, $theme ) {
-		$extend_url              = admin_url( 'admin.php?page=wp-autoplugin-extend-theme&theme=' . rawurlencode( $theme ) );
-		$extend_url              = wp_nonce_url( $extend_url, 'wp-autoplugin-extend-theme', 'nonce' );
-		$actions['extend_theme'] = '<a href="' . esc_url( $extend_url ) . '">' . esc_html__( 'Extend Theme', 'wp-autoplugin' ) . '</a>';
+		$extend_url              = admin_url( 'admin.php?page=catapulte-autoplugin-extend-theme&theme=' . rawurlencode( $theme ) );
+		$extend_url              = wp_nonce_url( $extend_url, 'catapulte-autoplugin-extend-theme', 'nonce' );
+		$actions['extend_theme'] = '<a href="' . esc_url( $extend_url ) . '">' . esc_html__( 'Extend Theme', 'catapulte-autoplugin' ) . '</a>';
 		return $actions;
 	}
 
@@ -86,8 +86,8 @@ class Action_Links {
 				wp.themes.data.themes.forEach(function(theme) {
 					if (theme.id) {
 						const selector = '.theme[data-slug=\"' + theme.id + '\"] .theme-actions';
-						const extendUrl = '" . esc_url( admin_url( 'admin.php?page=wp-autoplugin-extend-theme&theme=' ) ) . "' + encodeURIComponent(theme.id) + '&nonce=' + '" . esc_js( wp_create_nonce( 'wp-autoplugin-extend-theme' ) ) . "';
-						const actionLink = $('<a class=\"button button-small\" style=\"vertical-align: text-top;\" href=\"' + extendUrl + '\">' + '" . esc_html__( 'Extend', 'wp-autoplugin' ) . "' + '</a>');
+						const extendUrl = '" . esc_url( admin_url( 'admin.php?page=catapulte-autoplugin-extend-theme&theme=' ) ) . "' + encodeURIComponent(theme.id) + '&nonce=' + '" . esc_js( wp_create_nonce( 'catapulte-autoplugin-extend-theme' ) ) . "';
+						const actionLink = $('<a class=\"button button-small\" style=\"vertical-align: text-top;\" href=\"' + extendUrl + '\">' + '" . esc_html__( 'Extend', 'catapulte-autoplugin' ) . "' + '</a>');
 						$(selector).append(actionLink);
 					}
 				});

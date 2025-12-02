@@ -233,7 +233,7 @@ jQuery(document).ready(function($) {
 			url: ajaxurl,
 			type: 'POST',
 			data: {
-				action: 'wp_autoplugin_change_models',
+				action: 'catapulte_autoplugin_change_models',
 				nonce: wpAutopluginFooter.nonce,
 				default_model: defaultModel,
 				planner_model: plannerModel,

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin AJAX Fixer class.
+ * Catapulte-Autoplugin AJAX Fixer class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
-use WP_Autoplugin\Plugin_Fixer;
-use WP_Autoplugin\Plugin_Installer;
-use WP_Autoplugin\AI_Utils;
+use Catapulte_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Plugin_Fixer;
+use Catapulte_Autoplugin\Plugin_Installer;
+use Catapulte_Autoplugin\AI_Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -133,7 +133,7 @@ class Fixer {
 		$token_usage = $planner_api->get_last_token_usage();
 
 		// Strip code fences if model returns ```json.
-		$plan_data = \WP_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
+		$plan_data = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
 
 		wp_send_json_success(
 			[
@@ -169,7 +169,7 @@ class Fixer {
 		// For simple code responses, strip code fences. If JSON, keep as-is.
 		$trimmed = is_string( $code ) ? ltrim( $code ) : '';
 		if ( is_string( $code ) && $trimmed && '{' !== $trimmed[0] && '[' !== $trimmed[0] ) {
-			$code = \WP_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
+			$code = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
 		}
 
 		// Get token usage from the actual API that was used.
@@ -202,7 +202,7 @@ class Fixer {
 			wp_send_json(
 				[
 					'success'    => false,
-					'data'       => esc_html__( 'Invalid plugin path.', 'wp-autoplugin' ),
+					'data'       => esc_html__( 'Invalid plugin path.', 'catapulte-autoplugin' ),
 					'error_type' => 'install_error',
 				]
 			);
@@ -254,17 +254,17 @@ class Fixer {
 		$generated_files_array   = json_decode( $generated_files, true );
 
 		if ( ! $project_structure_array || ! isset( $project_structure_array['files'] ) ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		$files = $project_structure_array['files'];
 		if ( ! isset( $files[ $file_index ] ) ) {
-			wp_send_json_error( esc_html__( 'File index out of range.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'File index out of range.', 'catapulte-autoplugin' ) );
 		}
 
 		$file_info    = $files[ $file_index ];
 		$coder_api    = $this->admin->api_handler->get_coder_api();
-		$fixer        = new \WP_Autoplugin\Plugin_Fixer( $coder_api );
+		$fixer        = new \Catapulte_Autoplugin\Plugin_Fixer( $coder_api );
 		$file_content = $fixer->fix_single_file( $codebase['files'], $problem, $plugin_plan, $project_structure_array, is_array( $generated_files_array ) ? $generated_files_array : [], $file_info );
 		if ( is_wp_error( $file_content ) ) {
 			wp_send_json_error( $file_content->get_error_message() );
@@ -272,7 +272,7 @@ class Fixer {
 
 		// Strip out code fences based on file type.
 		$file_type    = isset( $file_info['type'] ) ? $file_info['type'] : 'php';
-		$file_content = \WP_Autoplugin\AI_Utils::strip_code_fences( $file_content );
+		$file_content = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $file_content );
 
 		$token_usage = $coder_api->get_last_token_usage();
 

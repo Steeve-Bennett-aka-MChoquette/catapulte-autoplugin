@@ -5,15 +5,15 @@ declare(strict_types=1);
 /**
  * Autoplugin Installer class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -61,7 +61,7 @@ class Plugin_Installer {
 	 */
 	public function install_plugin( string $code, string $plugin_name ): string|\WP_Error {
 		if ( $this->is_file_mods_disabled() ) {
-			return new \WP_Error( 'file_mods_disabled', __( 'Plugin installation is disabled.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'file_mods_disabled', __( 'Plugin installation is disabled.', 'catapulte-autoplugin' ) );
 		}
 
 		$wp_filesystem = $this->get_filesystem();
@@ -71,14 +71,14 @@ class Plugin_Installer {
 			// Treat as update to an existing plugin file path relative to WP_PLUGIN_DIR.
 			$clean_rel = wp_normalize_path( $plugin_name );
 			if ( str_contains( $clean_rel, '../' ) ) {
-				return new \WP_Error( 'invalid_path', __( 'Plugin path cannot contain "../".', 'wp-autoplugin' ) );
+				return new \WP_Error( 'invalid_path', __( 'Plugin path cannot contain "../".', 'catapulte-autoplugin' ) );
 			}
 			$plugin_file = WP_PLUGIN_DIR . '/' . $clean_rel;
 			if ( ! $wp_filesystem->exists( $plugin_file ) ) {
-				return new \WP_Error( 'file_not_found', __( 'Error updating plugin file: file does not exist.', 'wp-autoplugin' ) );
+				return new \WP_Error( 'file_not_found', __( 'Error updating plugin file: file does not exist.', 'catapulte-autoplugin' ) );
 			}
 		} else {
-			$plugin_name = sanitize_title( $plugin_name, 'wp-autoplugin-' . md5( $code ) );
+			$plugin_name = sanitize_title( $plugin_name, 'catapulte-autoplugin-' . md5( $code ) );
 			$plugin_dir  = WP_PLUGIN_DIR . '/' . $plugin_name . '/';
 			if ( ! $wp_filesystem->exists( $plugin_dir ) ) {
 				$wp_filesystem->mkdir( $plugin_dir, self::DIR_PERMISSIONS, true );
@@ -88,7 +88,7 @@ class Plugin_Installer {
 
 		$result = $wp_filesystem->put_contents( $plugin_file, $code, FS_CHMOD_FILE );
 		if ( $result === false ) {
-			return new \WP_Error( 'file_creation_error', __( 'Error creating plugin file.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'file_creation_error', __( 'Error creating plugin file.', 'catapulte-autoplugin' ) );
 		}
 
 		// Add the plugin to the list of autoplugins.
@@ -180,7 +180,7 @@ class Plugin_Installer {
 		array $generated_files
 	): string|\WP_Error {
 		if ( $this->is_file_mods_disabled() ) {
-			return new \WP_Error( 'file_mods_disabled', __( 'Plugin installation is disabled.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'file_mods_disabled', __( 'Plugin installation is disabled.', 'catapulte-autoplugin' ) );
 		}
 
 		$wp_filesystem = $this->get_filesystem();
@@ -188,7 +188,7 @@ class Plugin_Installer {
 		// Normalize file paths to remove common directory prefix.
 		[ $project_structure, $generated_files ] = $this->normalize_file_paths( $project_structure, $generated_files );
 
-		$plugin_name = sanitize_title( $plugin_name, 'wp-autoplugin-' . md5( wp_json_encode( $generated_files ) ) );
+		$plugin_name = sanitize_title( $plugin_name, 'catapulte-autoplugin-' . md5( wp_json_encode( $generated_files ) ) );
 		$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR . '/' . $plugin_name . '/' );
 
 		// Create plugin directory if it doesn't exist.
@@ -209,7 +209,7 @@ class Plugin_Installer {
 		}
 
 		if ( $main_file === '' ) {
-			return new \WP_Error( 'no_main_file', __( 'No main plugin file found.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'no_main_file', __( 'No main plugin file found.', 'catapulte-autoplugin' ) );
 		}
 
 		// Add the plugin to the list of autoplugins.
@@ -237,7 +237,7 @@ class Plugin_Installer {
 		foreach ( $project_structure['directories'] as $directory ) {
 			$directory = wp_normalize_path( $directory );
 			if ( str_contains( $directory, '../' ) ) {
-				return new \WP_Error( 'invalid_path', __( 'Invalid directory path.', 'wp-autoplugin' ) );
+				return new \WP_Error( 'invalid_path', __( 'Invalid directory path.', 'catapulte-autoplugin' ) );
 			}
 			$dir_path = $plugin_dir . $directory;
 			if ( ! $wp_filesystem->exists( $dir_path ) ) {
@@ -271,7 +271,7 @@ class Plugin_Installer {
 		foreach ( $project_structure['files'] as $file_info ) {
 			$file_path = wp_normalize_path( $file_info['path'] );
 			if ( str_contains( $file_path, '../' ) ) {
-				return new \WP_Error( 'invalid_path', __( 'Invalid file path.', 'wp-autoplugin' ) );
+				return new \WP_Error( 'invalid_path', __( 'Invalid file path.', 'catapulte-autoplugin' ) );
 			}
 			$target_path  = $plugin_dir . $file_path;
 			$file_content = $generated_files[ $file_info['path'] ] ?? '';
@@ -280,7 +280,7 @@ class Plugin_Installer {
 				return new \WP_Error(
 					'missing_file_content',
 					// Translators: %s: file path.
-					sprintf( __( 'Missing content for file: %s', 'wp-autoplugin' ), $file_info['path'] )
+					sprintf( __( 'Missing content for file: %s', 'catapulte-autoplugin' ), $file_info['path'] )
 				);
 			}
 
@@ -295,7 +295,7 @@ class Plugin_Installer {
 				return new \WP_Error(
 					'file_creation_error',
 					// Translators: %s: file path.
-					sprintf( __( 'Error creating file: %s', 'wp-autoplugin' ), $file_info['path'] )
+					sprintf( __( 'Error creating file: %s', 'catapulte-autoplugin' ), $file_info['path'] )
 				);
 			}
 
@@ -326,7 +326,7 @@ class Plugin_Installer {
 	 */
 	public function update_existing_plugin_files( string $plugin_file, array $files_map ): string|\WP_Error {
 		if ( $this->is_file_mods_disabled() ) {
-			return new \WP_Error( 'file_mods_disabled', __( 'Plugin modification is disabled.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'file_mods_disabled', __( 'Plugin modification is disabled.', 'catapulte-autoplugin' ) );
 		}
 
 		$wp_filesystem = $this->get_filesystem();
@@ -334,19 +334,19 @@ class Plugin_Installer {
 		// Sanitize and constrain plugin root inside plugins directory.
 		$plugin_file = wp_normalize_path( $plugin_file );
 		if ( str_contains( $plugin_file, '../' ) ) {
-			return new \WP_Error( 'invalid_path', __( 'Plugin path cannot contain "../".', 'wp-autoplugin' ) );
+			return new \WP_Error( 'invalid_path', __( 'Plugin path cannot contain "../".', 'catapulte-autoplugin' ) );
 		}
 		$plugin_root_rel = dirname( $plugin_file );
 		$plugin_root_abs = wp_normalize_path( WP_PLUGIN_DIR . '/' . $plugin_root_rel . '/' );
 
 		if ( ! $wp_filesystem->is_dir( $plugin_root_abs ) ) {
-			return new \WP_Error( 'invalid_plugin_dir', __( 'Target plugin directory does not exist.', 'wp-autoplugin' ) );
+			return new \WP_Error( 'invalid_plugin_dir', __( 'Target plugin directory does not exist.', 'catapulte-autoplugin' ) );
 		}
 
 		foreach ( $files_map as $rel_path => $contents ) {
 			$rel_path = wp_normalize_path( $rel_path );
 			if ( str_contains( $rel_path, '../' ) ) {
-				return new \WP_Error( 'invalid_path', __( 'Invalid file path.', 'wp-autoplugin' ) );
+				return new \WP_Error( 'invalid_path', __( 'Invalid file path.', 'catapulte-autoplugin' ) );
 			}
 			// Ensure path stays inside plugin directory.
 			if ( str_starts_with( $rel_path, $plugin_root_rel . '/' ) ) {
@@ -359,7 +359,7 @@ class Plugin_Installer {
 				return new \WP_Error(
 					'invalid_file_type',
 					// Translators: %s: file path.
-					sprintf( __( 'Unsupported file type for update: %s', 'wp-autoplugin' ), $rel_path )
+					sprintf( __( 'Unsupported file type for update: %s', 'catapulte-autoplugin' ), $rel_path )
 				);
 			}
 
@@ -374,7 +374,7 @@ class Plugin_Installer {
 				return new \WP_Error(
 					'file_write_error',
 					// Translators: %s: file path.
-					sprintf( __( 'Failed to write file: %s', 'wp-autoplugin' ), $rel_path )
+					sprintf( __( 'Failed to write file: %s', 'catapulte-autoplugin' ), $rel_path )
 				);
 			}
 		}
@@ -386,9 +386,9 @@ class Plugin_Installer {
 	 * Try to activate a plugin and catch fatal errors.
 	 */
 	public function activate_plugin( string $plugin ): never {
-		$autoplugins = get_option( 'wp_autoplugins', [] );
+		$autoplugins = get_option( 'catapulte_autoplugins', [] );
 		if ( ! is_array( $autoplugins ) || ! in_array( $plugin, $autoplugins, true ) ) {
-			wp_send_json_error( esc_html__( 'Plugin not found.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Plugin not found.', 'catapulte-autoplugin' ) );
 		}
 
 		// Hide PHP errors without silencing.
@@ -403,13 +403,13 @@ class Plugin_Installer {
 				$error = error_get_last();
 				if ( $error !== null && in_array( $error['type'], [ E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR ], true ) ) {
 					update_option(
-						'wp_autoplugin_fatal_error',
+						'catapulte_autoplugin_fatal_error',
 						[
 							'plugin' => $plugin,
 							'error'  => $error['message'],
 						]
 					);
-					echo '<meta http-equiv="refresh" content="0;url=' . esc_url( admin_url( 'admin.php?page=wp-autoplugin' ) ) . '">';
+					echo '<meta http-equiv="refresh" content="0;url=' . esc_url( admin_url( 'admin.php?page=catapulte-autoplugin' ) ) . '">';
 					exit;
 				}
 			}
@@ -424,7 +424,7 @@ class Plugin_Installer {
 			);
 
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
-			activate_plugin( $plugin, admin_url( 'admin.php?page=wp-autoplugin&plugin=' . rawurlencode( $plugin ) ) );
+			activate_plugin( $plugin, admin_url( 'admin.php?page=catapulte-autoplugin&plugin=' . rawurlencode( $plugin ) ) );
 
 			ob_end_clean();
 			restore_error_handler();
@@ -432,16 +432,16 @@ class Plugin_Installer {
 		} catch ( \ErrorException $e ) {
 			ob_end_clean();
 			restore_error_handler();
-			update_option( 'wp_autoplugin_fatal_error', $e->getMessage() );
-			wp_safe_redirect( esc_url( admin_url( 'admin.php?page=wp-autoplugin' ) ) );
+			update_option( 'catapulte_autoplugin_fatal_error', $e->getMessage() );
+			wp_safe_redirect( esc_url( admin_url( 'admin.php?page=catapulte-autoplugin' ) ) );
 			exit;
 		}
 
 		ob_end_clean();
 		restore_error_handler();
 
-		Admin\Notices::add_notice( esc_html__( 'Plugin activated successfully.', 'wp-autoplugin' ), 'success' );
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=wp-autoplugin' ) ) );
+		Admin\Notices::add_notice( esc_html__( 'Plugin activated successfully.', 'catapulte-autoplugin' ), 'success' );
+		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=catapulte-autoplugin' ) ) );
 		exit;
 	}
 
@@ -449,16 +449,16 @@ class Plugin_Installer {
 	 * Deactivate a plugin and redirect to the autoplugins list page.
 	 */
 	public function deactivate_plugin( string $plugin ): never {
-		$autoplugins = get_option( 'wp_autoplugins', [] );
+		$autoplugins = get_option( 'catapulte_autoplugins', [] );
 		if ( ! is_array( $autoplugins ) || ! in_array( $plugin, $autoplugins, true ) ) {
-			wp_send_json_error( esc_html__( 'Plugin not found.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Plugin not found.', 'catapulte-autoplugin' ) );
 		}
 
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 		deactivate_plugins( $plugin );
 
-		Admin\Notices::add_notice( esc_html__( 'Plugin deactivated successfully.', 'wp-autoplugin' ), 'success' );
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=wp-autoplugin' ) ) );
+		Admin\Notices::add_notice( esc_html__( 'Plugin deactivated successfully.', 'catapulte-autoplugin' ), 'success' );
+		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=catapulte-autoplugin' ) ) );
 		exit;
 	}
 
@@ -466,9 +466,9 @@ class Plugin_Installer {
 	 * Delete a plugin.
 	 */
 	public function delete_plugin( string $plugin ): never {
-		$autoplugins = get_option( 'wp_autoplugins', [] );
+		$autoplugins = get_option( 'catapulte_autoplugins', [] );
 		if ( ! is_array( $autoplugins ) || ! in_array( $plugin, $autoplugins, true ) ) {
-			wp_send_json_error( esc_html__( 'Plugin not found.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Plugin not found.', 'catapulte-autoplugin' ) );
 		}
 
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -478,15 +478,15 @@ class Plugin_Installer {
 		if ( is_wp_error( $deleted ) ) {
 			Admin\Notices::add_notice(
 				// Translators: %s: error message.
-				sprintf( esc_html__( 'Error deleting plugin: %s', 'wp-autoplugin' ), $deleted->get_error_message() ),
+				sprintf( esc_html__( 'Error deleting plugin: %s', 'catapulte-autoplugin' ), $deleted->get_error_message() ),
 				'error'
 			);
 		} else {
 			$autoplugins = array_diff( $autoplugins, [ $plugin ] );
-			update_option( 'wp_autoplugins', $autoplugins );
-			Admin\Notices::add_notice( esc_html__( 'Plugin deleted successfully.', 'wp-autoplugin' ), 'success' );
+			update_option( 'catapulte_autoplugins', $autoplugins );
+			Admin\Notices::add_notice( esc_html__( 'Plugin deleted successfully.', 'catapulte-autoplugin' ), 'success' );
 		}
-		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=wp-autoplugin' ) ) );
+		wp_safe_redirect( esc_url( admin_url( 'admin.php?page=catapulte-autoplugin' ) ) );
 		exit;
 	}
 
@@ -507,7 +507,7 @@ class Plugin_Installer {
 			WP_Filesystem();
 		}
 		if ( ! $wp_filesystem instanceof \WP_Filesystem_Base ) {
-			throw new \RuntimeException( __( 'Failed to initialize WordPress filesystem.', 'wp-autoplugin' ) );
+			throw new \RuntimeException( __( 'Failed to initialize WordPress filesystem.', 'catapulte-autoplugin' ) );
 		}
 		return $wp_filesystem;
 	}
@@ -516,10 +516,10 @@ class Plugin_Installer {
 	 * Add a plugin to the autoplugins list.
 	 */
 	private function add_to_autoplugins( string $plugin_file ): void {
-		$autoplugins   = get_option( 'wp_autoplugins', [] );
+		$autoplugins   = get_option( 'catapulte_autoplugins', [] );
 		$autoplugins   = is_array( $autoplugins ) ? $autoplugins : [];
 		$autoplugins[] = $plugin_file;
 		$autoplugins   = array_values( array_unique( $autoplugins ) );
-		update_option( 'wp_autoplugins', $autoplugins );
+		update_option( 'catapulte_autoplugins', $autoplugins );
 	}
 }

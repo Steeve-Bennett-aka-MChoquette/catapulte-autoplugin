@@ -38,9 +38,9 @@ function buildAccordion(plan) {
         // Hide testing_plan for now; store it globally for later display.
         if (skipParts.has(part)) {
             if (typeof plan[part] === 'object') {
-                wp_autoplugin.testing_plan = buildSubSections(plan[part]);
+                catapulte_autoplugin.testing_plan = buildSubSections(plan[part]);
             } else {
-                wp_autoplugin.testing_plan = plan[part];
+                catapulte_autoplugin.testing_plan = plan[part];
             }
             continue;
         }
@@ -280,10 +280,10 @@ function attachAccordionListeners() {
 }
 
 /**
- * CMD/CTRL + Enter on a textarea inside a form inside .wp-autoplugin elements submits the form.
+ * CMD/CTRL + Enter on a textarea inside a form inside .catapulte-autoplugin elements submits the form.
  */
 function attachFormSubmitListeners() {
-    document.querySelectorAll('.wp-autoplugin form').forEach(form => {
+    document.querySelectorAll('.catapulte-autoplugin form').forEach(form => {
         form.querySelectorAll('textarea').forEach(textarea => {
             textarea.addEventListener('keydown', function (event) {
                 if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {

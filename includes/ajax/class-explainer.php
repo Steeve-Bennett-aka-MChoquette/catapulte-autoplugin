@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin AJAX Explainer class.
+ * Catapulte-Autoplugin AJAX Explainer class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.3
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
-use WP_Autoplugin\Plugin_Explainer;
-use WP_Autoplugin\AI_Utils;
+use Catapulte_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Plugin_Explainer;
+use Catapulte_Autoplugin\AI_Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

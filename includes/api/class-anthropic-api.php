@@ -5,15 +5,15 @@ declare(strict_types=1);
 /**
  * Anthropic API class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -124,7 +124,7 @@ class Anthropic_API extends API {
 		if ( ! is_array( $data ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Invalid response from Anthropic API.', 'wp-autoplugin' )
+				__( 'Invalid response from Anthropic API.', 'catapulte-autoplugin' )
 			);
 		}
 
@@ -253,7 +253,7 @@ class Anthropic_API extends API {
 		if ( ! isset( $new_data['content'][0]['text'] ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Error communicating with the Anthropic API.', 'wp-autoplugin' )
+				__( 'Error communicating with the Anthropic API.', 'catapulte-autoplugin' )
 			);
 		}
 
@@ -275,7 +275,7 @@ class Anthropic_API extends API {
 
 		return new \WP_Error(
 			'api_error',
-			__( 'Error communicating with the Anthropic API.', 'wp-autoplugin' )
+			__( 'Error communicating with the Anthropic API.', 'catapulte-autoplugin' )
 		);
 	}
 }

@@ -1,10 +1,10 @@
-# WP-Autoplugin
+# Catapulte-Autoplugin
 
 <p align="center">
-  <img src="https://wp-autoplugin.com/logo192.png" alt="WP-Autoplugin Logo" width="128">
+  <img src="https://catapultcommunication.com/logo192.png" alt="Catapulte-Autoplugin Logo" width="128">
 </p>
 
-WP-Autoplugin is a free WordPress plugin that uses AI to assist in generating, fixing, and extending plugins on-demand. It enables users to quickly create functional plugins from simple descriptions, addressing specific needs without unnecessary bloat.
+Catapulte-Autoplugin is a WordPress plugin that uses AI to assist in generating, fixing, and extending plugins on-demand. It enables users to quickly create functional plugins from simple descriptions, addressing specific needs without unnecessary bloat.
 
 - Generate plugins using AI
 - Fix and extend existing plugins
@@ -14,7 +14,7 @@ WP-Autoplugin is a free WordPress plugin that uses AI to assist in generating, f
 
 ---
 
-WP-Autoplugin offers practical solutions for various WordPress development scenarios:
+Catapulte-Autoplugin offers practical solutions for various WordPress development scenarios:
 
 - **Lightweight Alternatives**: Create simple, focused plugins to replace large, feature-heavy plugins that may slow down your site or include unnecessary features and advertisements.
 - **Custom Solutions**: Develop site-specific plugins tailored to your unique requirements, eliminating the need for complex workarounds or multiple plugins.
@@ -32,26 +32,19 @@ WP-Autoplugin offers practical solutions for various WordPress development scena
 ## How It Works
 
 1. **Describe Your Plugin**: Provide a description of the plugin you want to create.
-2. **AI Generation**: WP-Autoplugin uses AI to generate a development plan and write the code.
+2. **AI Generation**: Catapulte-Autoplugin uses AI to generate a development plan and write the code.
 3. **Review and Install**: Review the generated plan and code, make any necessary changes, and install the plugin with a single click.
 
-You can also use WP-Autoplugin to **fix bugs**, **add new features**, or **explain plugins** you've created with the tool. The **Explain Plugin** feature allows you to ask questions or obtain general overviews of generated plugins, helping you better understand their functionality and structure.
+You can also use Catapulte-Autoplugin to **fix bugs**, **add new features**, or **explain plugins** you've created with the tool. The **Explain Plugin** feature allows you to ask questions or obtain general overviews of generated plugins, helping you better understand their functionality and structure.
 
 ## Complex Plugin Generation
 
-WP-Autoplugin's complex plugin mode enables the creation of sophisticated, multi-file plugins with:
+Catapulte-Autoplugin's complex plugin mode enables the creation of sophisticated, multi-file plugins with:
 
 - **Proper File Structure**: Organized directories and file hierarchies
 - **Object-Oriented Design**: Well-structured classes and namespaces
 - **Scalable Architecture**: Plugins designed for growth and maintenance
 - **Professional Standards**: Code that follows WordPress development best practices
-
-<details>
-<summary>Click to view complex plugin generation screenshot</summary>
-
-![Complex plugin generation interface](https://wp-autoplugin.com/screenshot-6.png)
-
-</details>
 
 ## Specialized Models Configuration
 
@@ -79,31 +72,22 @@ This helps you:
 - Choose the most cost-efficient models for your needs
 - Understand the token impact of different generation modes
 
-<details>
-<summary>Click to view token usage information screenshot</summary>
-
-![Token usage information](https://wp-autoplugin.com/screenshot-7.png)
-
-</details>
-
 ## Extend Third-Party Plugins and Themes with Hooks
 
-WP-Autoplugin allows you to easily extend **any plugin** or **theme** directly from the WordPress admin dashboard:
+Catapulte-Autoplugin allows you to easily extend **any plugin** or **theme** directly from the WordPress admin dashboard:
 
 - Click on the "**Extend Plugin**" action link for the plugin you'd like to enhance, or look for the "**Extend**" button on the Appearance > Themes page.
-- WP-Autoplugin will analyze the selected plugin or theme, extracting available action and filter hooks along with relevant contextual details.
-- Provide a description of the desired extension; WP-Autoplugin assesses the technical feasibility using available hooks.
+- Catapulte-Autoplugin will analyze the selected plugin or theme, extracting available action and filter hooks along with relevant contextual details.
+- Provide a description of the desired extension; Catapulte-Autoplugin assesses the technical feasibility using available hooks.
 - A new extension plugin will be generated based on your description, allowing seamless integration with the existing functionality.
-
-Demo video: [Extend a third-party plugin with WP-Autoplugin](https://www.youtube.com/watch?v=_9RnFcEGncY)
 
 ## Auto-detect Fatal Errors
 
-When you activate an AI-generated plugin, WP-Autoplugin will automatically detect fatal errors and deactivate the plugin to prevent site crashes. A message with the error details will be displayed, along with a link to fix the issue automatically with AI.
+When you activate an AI-generated plugin, Catapulte-Autoplugin will automatically detect fatal errors and deactivate the plugin to prevent site crashes. A message with the error details will be displayed, along with a link to fix the issue automatically with AI.
 
 ## Supported Models
 
-WP-Autoplugin supports 30+ AI models, including:
+Catapulte-Autoplugin supports 30+ AI models, including:
 
 - Claude 4.1 Opus
 - Claude 4 Sonnet
@@ -125,29 +109,29 @@ WP-Autoplugin supports 30+ AI models, including:
 - Google Gemini 2.5 Flash Lite
 - xAI Grok 4
 
-While WP-Autoplugin is free to use, you may need to pay for API usage based on your chosen model.
+While Catapulte-Autoplugin is free to use, you may need to pay for API usage based on your chosen model.
 
 ## Custom Models
 
-WP-Autoplugin supports custom models: you can plug in any OpenAI-compatible API by providing the endpoint URL, model name, and API key. This feature allows you to use any model you have access to, including locally hosted models, or custom models you've trained yourself.
+Catapulte-Autoplugin supports custom models: you can plug in any OpenAI-compatible API by providing the endpoint URL, model name, and API key. This feature allows you to use any model you have access to, including locally hosted models, or custom models you've trained yourself.
 
 ## BYOK (Bring Your Own Key)
 
-To use WP-Autoplugin, you'll need an API key from an AI provider. Insert your key in the plugin settings to get started. Your API key remains on your server and is not shared with anyone.
+To use Catapulte-Autoplugin, you'll need an API key from an AI provider. Insert your key in the plugin settings to get started. Your API key remains on your server and is not shared with anyone.
 
 Some AI platforms currently offer free plans and include SOTA models, like **Gemini 2.5 Pro** through [Google AI Studio](https://aistudio.google.com/). Refer to the respective websites for pricing information.
 
 ## AI-Generated Plugins
 
-Plugins created by WP-Autoplugin are standard WordPress plugins:
+Plugins created by Catapulte-Autoplugin are standard WordPress plugins:
 
-- They function independently and will continue to work even if WP-Autoplugin is deactivated or deleted.
-- You can install them on other WordPress sites without WP-Autoplugin.
-- While WP-Autoplugin provides a convenient listing screen for generated plugins, they can also be managed from the standard WordPress Plugins screen.
+- They function independently and will continue to work even if Catapulte-Autoplugin is deactivated or deleted.
+- You can install them on other WordPress sites without Catapulte-Autoplugin.
+- While Catapulte-Autoplugin provides a convenient listing screen for generated plugins, they can also be managed from the standard WordPress Plugins screen.
 
 ## Code Quality and Security
 
-WP-Autoplugin aims to generate code that adheres to WordPress coding standards. However, it's important to treat AI-generated code with the same caution you would apply to any third-party code. We strongly recommend:
+Catapulte-Autoplugin aims to generate code that adheres to WordPress coding standards. However, it's important to treat AI-generated code with the same caution you would apply to any third-party code. We strongly recommend:
 
 - Reviewing and testing all generated code before use in a production environment.
 - Conducting thorough testing on a staging site before deployment.
@@ -155,40 +139,15 @@ WP-Autoplugin aims to generate code that adheres to WordPress coding standards. 
 
 ## Installation
 
-1. Download the latest release from the [Releases](https://github.com/WP-Autoplugin/wp-autoplugin/releases) page.
-2. Upload the plugin zip file through the 'Plugins' screen in WordPress, or unzip the file and upload the `wp-autoplugin` folder to the `/wp-content/plugins/` directory.
-3. Activate the plugin through the 'Plugins' screen in WordPress.
-4. Go to the WP-Autoplugin settings page and enter your API key(s).
-5. Choose your preferred AI model in the settings.
-6. Start generating plugins!
-
-## Screenshots
-
-<details>
-<summary>Click to view screenshots</summary>
-
-1. Generate plugin form
-![Generate plugin form](https://wp-autoplugin.com/screenshot-1.png)
-
-2. Review generated plan
-![Review generated plan](https://wp-autoplugin.com/screenshot-2.png)
-
-3. Review generated code
-![Review generated code](https://wp-autoplugin.com/screenshot-3.png)
-
-4. Autoplugins listing screen
-![Autoplugins listing screen](https://wp-autoplugin.com/screenshot-4.png)
-
-5. Fix plugin form
-![Fix plugin form](https://wp-autoplugin.com/screenshot-5.png)
-
-</details>
-
-Or watch the [WP-Autoplugin demo video on Youtube](https://www.youtube.com/watch?v=b36elwTLfa4) that shows how it generates a plugin and fixes a bug.
+1. Upload the plugin zip file through the 'Plugins' screen in WordPress, or unzip the file and upload the `catapulte-autoplugin` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+3. Go to the Catapulte-Autoplugin settings page and enter your API key(s).
+4. Choose your preferred AI model in the settings.
+5. Start generating plugins!
 
 ## Translations
 
-WP-Autoplugin is fully translatable. If you would like to contribute a translation, please create a pull request with the translation files. Currently, the plugin includes translations for the following languages:
+Catapulte-Autoplugin is fully translatable. If you would like to contribute a translation, please create a pull request with the translation files. Currently, the plugin includes translations for the following languages:
 - English - `en_US`
 - Français (French) - `fr_FR`
 - Español (Spanish) - `es_ES`
@@ -203,98 +162,4 @@ WP-Autoplugin is fully translatable. If you would like to contribute a translati
 
 ## Licensing
 
-WP-Autoplugin is licensed under the GPLv3 or later.
-
-## Changelog
-
-### 1.7
-- Added image input support for OpenAI, Anthropic and Google models
-- Added support for Claude Sonnet 4.5-20250929 model
-- Added support for GPT-5-Codex model and the OpenAI Responses API
-
-### 1.6
-- Added complex plugin mode for multi-file plugin generation
-- Added specialized model settings to delegate tasks to specific AI models
-- Added detailed token usage tracking and display
-- Improved plugin generation architecture
-- Enhanced UI with better progress indicators
-
-### 1.5
-- Added Extend Themes feature to extend existing themes with hooks
-- Added support for new AI models
-
-### 1.4.3
-- Added support for Google Gemini 2.5 Pro model
-- Fixed minor UI issue in the Fix Plugin form
-- Improved code generation step for the Fix Plugin feature to avoid fatal errors
-
-### 1.4.2 
-- Added a "Copy Hooks" button to use the extracted hooks with any LLM
-- Added CMD/CTRL + Enter shortcut to submit the forms
-- Fixed minor UI issues
-
-### 1.4.1
-- Added option to change model at every step
-- Fixed minor issues with the Extend Plugin feature
-
-### 1.4
-- Analyze and extend any third-party plugin
-
-### 1.3
-- Added new Explain Plugin feature
-- Refactored admin-side PHP & JS codes
-- Added new Google models
-
-### 1.2.1
-- Added support for reasoning models (o1, o3-mini, Claude 3.7 Sonnet Thinking)
-- Fixed PHPCS issues throughout the codebase
-
-### 1.2
-- Added support for any OpenAI-compatible API with the custom models option
-- Added translations for 10 more languages
-- Fixed PHP notice on "Add New Plugin" screen.
-
-### 1.1.2
-- Added support for Google Gemini Flash 2.0 Thinking model
-- Added support for xAI Grok-2-1212 model
-
-### 1.1.1
-- Added support for Claude 3.5 Sonnet-20241022, Gemini 2.0 Flash Experimental, and Gemini Experimental 1206 models
-- Some refactoring and code cleanup
-
-### 1.1
-- Added support for Claude 3.5 Haiku
-- Added support for xAI and its only current model, Grok-beta
-- Fixed an issue that prevented the code from being edited in the code editor
-- Fixed wrong model name for "chatgpt-4o-latest"
-- Improved the generator prompt for better code generation on lower-end models
-- Improved inline documentation
-
-### 1.0.6
-- Fixed Github updater class
-- Fixed a few bugs
-- Added i18n support and Hungarian translation
-- Adjusted prompt for better code generation
-- Added docblocks to the code
-
-### 1.0.5
-- Added update from GitHub feature
-- Reorganized files and folders and added Composer support
-- Fixed small bugs
-
-### 1.0.4
-- Added support for Google Gemini models
-
-### 1.0.3
-- Added support for gpt-4o-2024-08-06
-- Cleaned up prompts for better readability
-
-### 1.0.2
-- Added support for GPT-4o mini
-- Added support for the high-limit (8192 tokens) version of Claude 3.5 Sonnet
-
-### 1.0.1
-- Fixed max_tokens value for OpenAI models
-
-### 1.0
-- Initial release
+Catapulte-Autoplugin is licensed under the GPLv3 or later.

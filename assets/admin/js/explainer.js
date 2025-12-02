@@ -60,19 +60,19 @@
                     if (radio.checked) {
                         switch(radio.value) {
                             case 'security':
-                                focusText = wp_autoplugin.messages.security_focus || 'Security Analysis';
+                                focusText = catapulte_autoplugin.messages.security_focus || 'Security Analysis';
                                 break;
                             case 'performance':
-                                focusText = wp_autoplugin.messages.performance_focus || 'Performance Review';
+                                focusText = catapulte_autoplugin.messages.performance_focus || 'Performance Review';
                                 break;
                             case 'code-quality':
-                                focusText = wp_autoplugin.messages.code_quality_focus || 'Code Quality Analysis';
+                                focusText = catapulte_autoplugin.messages.code_quality_focus || 'Code Quality Analysis';
                                 break;
                             case 'usage':
-                                focusText = wp_autoplugin.messages.usage_focus || 'Usage Instructions';
+                                focusText = catapulte_autoplugin.messages.usage_focus || 'Usage Instructions';
                                 break;
                             default:
-                                focusText = wp_autoplugin.messages.general_explanation || 'General Explanation';
+                                focusText = catapulte_autoplugin.messages.general_explanation || 'General Explanation';
                         }
                         break;
                     }
@@ -102,15 +102,15 @@
         }
 
         explainPluginForm.parentElement.classList.add('loading');
-        const loader = loadingIndicator(messageExplainPlugin, wp_autoplugin.messages.generating_explanation || 'Generating plugin explanation...');
+        const loader = loadingIndicator(messageExplainPlugin, catapulte_autoplugin.messages.generating_explanation || 'Generating plugin explanation...');
         loader.start();
 
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_explain_plugin');
+        formData.append('action', 'catapulte_autoplugin_explain_plugin');
         formData.append('plugin_question', pluginQuestion);
         formData.append('plugin_file', document.getElementById('plugin_file').value);
         formData.append('explain_focus', explanationFocus);
-        formData.append('security', wp_autoplugin.nonce);
+        formData.append('security', catapulte_autoplugin.nonce);
         promptAttachments.appendToFormData(formData);
 
         try {
@@ -119,7 +119,7 @@
             explainPluginForm.parentElement.classList.remove('loading');
 
             if (!response.success) {
-                messageExplainPlugin.innerHTML = (wp_autoplugin.messages.explanation_error || 'Error generating explanation:') + ' <pre>' + response.data + '</pre>';
+                messageExplainPlugin.innerHTML = (catapulte_autoplugin.messages.explanation_error || 'Error generating explanation:') + ' <pre>' + response.data + '</pre>';
                 return;
             }
 
@@ -138,7 +138,7 @@
         } catch (error) {
             loader.stop();
             explainPluginForm.parentElement.classList.remove('loading');
-            messageExplainPlugin.innerHTML = (wp_autoplugin.messages.explanation_error || 'Error generating explanation:') + ' <pre>' + error.message + '</pre>';
+            messageExplainPlugin.innerHTML = (catapulte_autoplugin.messages.explanation_error || 'Error generating explanation:') + ' <pre>' + error.message + '</pre>';
         }
     }
 
@@ -185,12 +185,12 @@
 
     function copyToClipboard() {
         navigator.clipboard.writeText(explanationText).then(() => {
-            messageExplanation.innerHTML = wp_autoplugin.messages.copied || 'Explanation copied to clipboard!';
+            messageExplanation.innerHTML = catapulte_autoplugin.messages.copied || 'Explanation copied to clipboard!';
             setTimeout(() => {
                 messageExplanation.innerHTML = '';
             }, 2000);
         }).catch(err => {
-            messageExplanation.innerHTML = (wp_autoplugin.messages.copy_failed || 'Failed to copy:') + ' ' + err;
+            messageExplanation.innerHTML = (catapulte_autoplugin.messages.copy_failed || 'Failed to copy:') + ' ' + err;
         });
     }
 

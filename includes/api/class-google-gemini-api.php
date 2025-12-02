@@ -5,15 +5,15 @@ declare(strict_types=1);
 /**
  * Google Gemini API class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -92,7 +92,7 @@ class Google_Gemini_API extends API {
 		if ( ! is_array( $data ) || ! isset( $data['candidates'][0] ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Error communicating with the Google Gemini API.', 'wp-autoplugin' )
+				__( 'Error communicating with the Google Gemini API.', 'catapulte-autoplugin' )
 			);
 		}
 
@@ -101,7 +101,7 @@ class Google_Gemini_API extends API {
 		if ( ! isset( $candidate['content']['parts'] ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Error communicating with the Google Gemini API.', 'wp-autoplugin' )
+				__( 'Error communicating with the Google Gemini API.', 'catapulte-autoplugin' )
 			);
 		}
 

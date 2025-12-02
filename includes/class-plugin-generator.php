@@ -4,15 +4,15 @@ declare(strict_types=1);
 /**
  * Autoplugin Generator class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -46,7 +46,7 @@ class Plugin_Generator {
 	 * @return string|\WP_Error
 	 */
 	public function generate_plugin_plan( string $input, array $prompt_images = [] ): string|\WP_Error {
-		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
+		$plugin_mode = get_option( 'catapulte_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
 			return $this->generate_complex_plugin_plan( $input, $prompt_images );
@@ -153,7 +153,7 @@ class Plugin_Generator {
 	 * @return string|\WP_Error
 	 */
 	public function generate_plugin_code( string $plan ): string|\WP_Error {
-		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
+		$plugin_mode = get_option( 'catapulte_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
 			// For complex mode, this method shouldn't be used directly
@@ -168,7 +168,7 @@ class Plugin_Generator {
 			$plan
 			```
 
-			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "WP-Autoplugin" for the Author of the plugin, with Author URI: https://wp-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
+			Important: all code should be self-contained within one PHP file and follow WordPress coding standards. Use inline Javascript and CSS, inside the main PHP file. Additional CSS or JS files cannot be included. Use appropriate WP hooks, actions, and filters as necessary. Always use "Catapulte-Autoplugin" for the Author of the plugin, with Author URI: https://catapulte-autoplugin.com. Do not add the final closing "?>" tag in the PHP file.
 			PROMPT;
 
 		return $this->ai_api->send_prompt( $prompt );
@@ -232,7 +232,7 @@ class Plugin_Generator {
 			- Follow WordPress coding standards and use tabs for indentation
 			- Use appropriate PHP namespaces and class structures
 			- Include proper WordPress security measures (nonces, capability checks, sanitization)
-			- Use "WP-Autoplugin" as the plugin author with Author URI: https://wp-autoplugin.com
+			- Use "Catapulte-Autoplugin" as the plugin author with Author URI: https://catapulte-autoplugin.com
 			- Do not add the final closing "?>" tag in PHP files
 			- Ensure the code is complete and functional – do not add placeholders
 			- Ensure the code complements the overall plugin plan and works seamlessly with other files

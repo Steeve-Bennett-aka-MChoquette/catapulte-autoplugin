@@ -15,7 +15,11 @@
       "Bash(where:*)",
       "Bash(git reset:*)",
       "Bash(cat:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(del \"J:\\git\\wp-autoplugin-standalone\\wp-autoplugin.php\")",
+      "Bash(composer install:*)",
+      "Bash(composer update:*)",
+      "Bash(php -l:*)"
     ],
     "deny": [],
     "ask": []

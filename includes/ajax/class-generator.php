@@ -3,19 +3,20 @@
 declare(strict_types=1);
 
 /**
- * WP-Autoplugin AJAX Generator class.
+ * Catapulte-Autoplugin AJAX Generator class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
-use WP_Autoplugin\Plugin_Generator;
-use WP_Autoplugin\Plugin_Installer;
-use WP_Autoplugin\AI_Utils;
+use Catapulte_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Plugin_Generator;
+use Catapulte_Autoplugin\Plugin_Installer;
+use Catapulte_Autoplugin\AI_Utils;
+use Catapulte_Autoplugin\History;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -58,10 +59,10 @@ class Generator {
 		}
 
 		// Strip out any code block fences like ```json ... ```.
-		$plan_data  = \WP_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
+		$plan_data  = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
 		$plan_array = json_decode( $plan_data, true );
 		if ( ! $plan_array ) {
-			wp_send_json_error( esc_html__( 'Failed to decode the generated plan: ', 'wp-autoplugin' ) . $plan_data );
+			wp_send_json_error( esc_html__( 'Failed to decode the generated plan: ', 'catapulte-autoplugin' ) . $plan_data );
 		}
 
 		// Get token usage from the actual API that was used.
@@ -93,7 +94,7 @@ class Generator {
 		}
 
 		// Strip out code fences like ```php ... ```.
-		$code = \WP_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
+		$code = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
 
 		// Get token usage from the actual API that was used.
 		$token_usage = $coder_api->get_last_token_usage();
@@ -123,7 +124,7 @@ class Generator {
 		$generated_files_array   = json_decode( $generated_files, true );
 
 		if ( ! is_array( $plugin_plan_array ) || ! is_array( $project_structure_array ) || ! isset( $project_structure_array['files'] ) ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		// Ensure generated_files_array is an array (can be empty on first file).
@@ -133,7 +134,7 @@ class Generator {
 
 		$files = $project_structure_array['files'];
 		if ( ! isset( $files[ $file_index ] ) ) {
-			wp_send_json_error( esc_html__( 'File index out of range.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'File index out of range.', 'catapulte-autoplugin' ) );
 		}
 
 		$file_info    = $files[ $file_index ];
@@ -147,7 +148,7 @@ class Generator {
 
 		// Strip out code fences.
 		$file_type    = $file_info['type'];
-		$file_content = \WP_Autoplugin\AI_Utils::strip_code_fences( $file_content );
+		$file_content = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $file_content );
 
 		// Get token usage from the actual API that was used.
 		$token_usage = $coder_api->get_last_token_usage();
@@ -168,7 +169,7 @@ class Generator {
 	 * @return void
 	 */
 	public function create_plugin() {
-		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
+		$plugin_mode = get_option( 'catapulte_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
 			$this->create_complex_plugin();
@@ -183,8 +184,10 @@ class Generator {
 	 * @return void
 	 */
 	private function create_simple_plugin() {
-		$code        = isset( $_POST['plugin_code'] ) ? wp_unslash( $_POST['plugin_code'] ) : ''; // phpcs:ignore -- This cannot be sanitized, as it's the plugin code. Nonce verification is done in the parent method.
-		$plugin_name = isset( $_POST['plugin_name'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_name'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
+		$code               = isset( $_POST['plugin_code'] ) ? wp_unslash( $_POST['plugin_code'] ) : ''; // phpcs:ignore -- This cannot be sanitized, as it's the plugin code. Nonce verification is done in the parent method.
+		$plugin_name        = isset( $_POST['plugin_name'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_name'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
+		$plugin_description = isset( $_POST['plugin_description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['plugin_description'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
+		$plugin_plan        = isset( $_POST['plugin_plan'] ) ? wp_unslash( $_POST['plugin_plan'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON. Nonce verification is done in the parent method.
 
 		$installer = Plugin_Installer::get_instance();
 		$result    = $installer->install_plugin( $code, $plugin_name );
@@ -198,6 +201,21 @@ class Generator {
 			);
 		}
 
+		// Save to history.
+		$plan_array = json_decode( $plugin_plan, true );
+		if ( $plugin_description && $plan_array ) {
+			$history = History::get_instance();
+			$history->add_entry(
+				[
+					'plugin_name'        => $plugin_name,
+					'plugin_slug'        => sanitize_title( $plugin_name ),
+					'plugin_description' => $plugin_description,
+					'plugin_plan'        => $plan_array,
+					'plugin_mode'        => 'simple',
+				]
+			);
+		}
+
 		wp_send_json_success( $result );
 	}
 
@@ -207,16 +225,19 @@ class Generator {
 	 * @return void
 	 */
 	private function create_complex_plugin() {
-		$plugin_name       = isset( $_POST['plugin_name'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_name'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
-		$project_structure = isset( $_POST['project_structure'] ) ? wp_unslash( $_POST['project_structure'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON data. Nonce verification is done in the parent method.
-		$generated_files   = isset( $_POST['generated_files'] ) ? wp_unslash( $_POST['generated_files'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON data. Nonce verification is done in the parent method.
+		$plugin_name        = isset( $_POST['plugin_name'] ) ? sanitize_text_field( wp_unslash( $_POST['plugin_name'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
+		$plugin_description = isset( $_POST['plugin_description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['plugin_description'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verification is done in the parent method.
+		$plugin_plan        = isset( $_POST['plugin_plan'] ) ? wp_unslash( $_POST['plugin_plan'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON. Nonce verification is done in the parent method.
+		$project_structure  = isset( $_POST['project_structure'] ) ? wp_unslash( $_POST['project_structure'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON data. Nonce verification is done in the parent method.
+		$generated_files    = isset( $_POST['generated_files'] ) ? wp_unslash( $_POST['generated_files'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Cannot sanitize JSON data. Nonce verification is done in the parent method.
 
 		// Decode JSON data.
+		$plan_array              = json_decode( $plugin_plan, true );
 		$project_structure_array = json_decode( $project_structure, true );
 		$generated_files_array   = json_decode( $generated_files, true );
 
 		if ( ! $project_structure_array || ! $generated_files_array ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		$installer = Plugin_Installer::get_instance();
@@ -227,6 +248,22 @@ class Generator {
 					'success'    => false,
 					'data'       => $result->get_error_message(),
 					'error_type' => 'install_error',
+				]
+			);
+		}
+
+		// Save to history.
+		if ( $plugin_description && $plan_array ) {
+			$history = History::get_instance();
+			$history->add_entry(
+				[
+					'plugin_name'        => $plugin_name,
+					'plugin_slug'        => sanitize_title( $plugin_name ),
+					'plugin_description' => $plugin_description,
+					'plugin_plan'        => $plan_array,
+					'plugin_mode'        => 'complex',
+					'project_structure'  => $project_structure_array,
+					'generated_files'    => $generated_files_array,
 				]
 			);
 		}
@@ -249,7 +286,7 @@ class Generator {
 		$generated_files_array   = json_decode( $generated_files, true );
 
 		if ( ! $project_structure_array || ! $generated_files_array ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		$reviewer_api  = $this->admin->api_handler->get_reviewer_api();
@@ -261,10 +298,10 @@ class Generator {
 		}
 
 		// Strip out any code block fences like ```json ... ```.
-		$review_result = \WP_Autoplugin\AI_Utils::strip_code_fences( $review_result, 'json' );
+		$review_result = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $review_result, 'json' );
 		$review_result = json_decode( $review_result, true );
 		if ( ! $review_result ) {
-			wp_send_json_error( esc_html__( 'Failed to decode the review result.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Failed to decode the review result.', 'catapulte-autoplugin' ) );
 		}
 
 		// Get token usage from the actual API that was used.

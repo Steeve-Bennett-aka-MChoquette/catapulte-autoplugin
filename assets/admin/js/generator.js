@@ -69,20 +69,20 @@
 
         const descriptionValue = descriptionField.value.trim();
         if (descriptionValue === '' && !promptAttachments.hasImages()) {
-            document.getElementById('generate-plan-message').innerHTML = wp_autoplugin.messages.empty_description;
+            document.getElementById('generate-plan-message').innerHTML = catapulte_autoplugin.messages.empty_description;
             return;
         }
 
         generatePlanForm.parentElement.classList.add('loading');
         pluginDescription = descriptionField.value;
 
-        const loader = loadingIndicator(document.getElementById('generate-plan-message'), wp_autoplugin.messages.generating_plan);
+        const loader = loadingIndicator(document.getElementById('generate-plan-message'), catapulte_autoplugin.messages.generating_plan);
         loader.start();
 
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_generate_plan');
+        formData.append('action', 'catapulte_autoplugin_generate_plan');
         formData.append('plugin_description', pluginDescription);
-        formData.append('security', wp_autoplugin.nonce);
+        formData.append('security', catapulte_autoplugin.nonce);
         promptAttachments.appendToFormData(formData);
 
         try {
@@ -92,7 +92,7 @@
 
             if (!response.success) {
                 document.getElementById('generate-plan-message').innerHTML =
-                    wp_autoplugin.messages.plan_generation_error + ' <pre>' + response.data + '</pre>';
+                    catapulte_autoplugin.messages.plan_generation_error + ' <pre>' + response.data + '</pre>';
                 return;
             }
 
@@ -127,7 +127,7 @@
             loader.stop();
             generatePlanForm.parentElement.classList.remove('loading');
             document.getElementById('generate-plan-message').innerHTML =
-                wp_autoplugin.messages.plan_generation_error + ' <pre>' + error.message + '</pre>';
+                catapulte_autoplugin.messages.plan_generation_error + ' <pre>' + error.message + '</pre>';
         }
     }
 
@@ -135,7 +135,7 @@
         event.preventDefault();
 
         generateCodeForm.parentElement.classList.add('loading');
-        const loader = loadingIndicator(document.getElementById('generate-code-message'), wp_autoplugin.messages.generating_code);
+        const loader = loadingIndicator(document.getElementById('generate-code-message'), catapulte_autoplugin.messages.generating_code);
         loader.start();
 
         // Rebuild plugin plan from the accordion textareas/inputs
@@ -160,10 +160,10 @@
         } else {
             // For simple mode, generate code as before
             const formData = new FormData();
-            formData.append('action', 'wp_autoplugin_generate_code');
+            formData.append('action', 'catapulte_autoplugin_generate_code');
             formData.append('plugin_description', pluginDescription);
             formData.append('plugin_plan', JSON.stringify(plan));
-            formData.append('security', wp_autoplugin.nonce);
+            formData.append('security', catapulte_autoplugin.nonce);
 
             try {
                 const response = await wpAutoPluginCommon.sendRequest(formData);
@@ -172,7 +172,7 @@
 
                 if (!response.success) {
                     document.getElementById('generate-code-message').innerHTML =
-                        wp_autoplugin.messages.code_generation_error + ' <pre>' + response.data + '</pre>';
+                        catapulte_autoplugin.messages.code_generation_error + ' <pre>' + response.data + '</pre>';
                     return;
                 }
 
@@ -203,7 +203,7 @@
                 loader.stop();
                 generateCodeForm.parentElement.classList.remove('loading');
                 document.getElementById('generate-code-message').innerHTML =
-                    wp_autoplugin.messages.code_generation_error + ' <pre>' + error.message + '</pre>';
+                    catapulte_autoplugin.messages.code_generation_error + ' <pre>' + error.message + '</pre>';
             }
         }
     }
@@ -212,16 +212,18 @@
         event.preventDefault();
 
         createPluginForm.parentElement.classList.add('loading');
-        const loader = loadingIndicator(document.getElementById('create-plugin-message'), wp_autoplugin.messages.creating_plugin);
+        const loader = loadingIndicator(document.getElementById('create-plugin-message'), catapulte_autoplugin.messages.creating_plugin);
         loader.start();
 
         const pluginName = document.getElementById('plugin_name').value;
 
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_create_plugin');
+        formData.append('action', 'catapulte_autoplugin_create_plugin');
         formData.append('plugin_name', pluginName);
-        formData.append('security', wp_autoplugin.nonce);
-        
+        formData.append('plugin_description', pluginDescription);
+        formData.append('plugin_plan', JSON.stringify(pluginPlan));
+        formData.append('security', catapulte_autoplugin.nonce);
+
         if (pluginMode === 'complex') {
             // Update generated files with current editor content
             const updatedFiles = {...generatedFiles};
@@ -230,7 +232,7 @@
                     updatedFiles[filePath] = editor.codemirror.getValue();
                 }
             }
-            
+
             formData.append('project_structure', JSON.stringify(projectStructure));
             formData.append('generated_files', JSON.stringify(updatedFiles));
         } else {
@@ -244,23 +246,23 @@
 
             if (response.success) {
                 // Show success message
-                document.getElementById('create-plugin-message').innerHTML = wp_autoplugin.messages.plugin_created;
+                document.getElementById('create-plugin-message').innerHTML = catapulte_autoplugin.messages.plugin_created;
                 document
                     .getElementById('create-plugin-message')
                     .insertAdjacentHTML(
                         'beforeend',
-                        `<h2>${wp_autoplugin.messages.how_to_test}</h2>
-                         <pre class="autoplugin-testing-plan">${nl2br(wp_autoplugin.testing_plan)}</pre>
-                         <p>${wp_autoplugin.messages.use_fixer}</p>`
+                        `<h2>${catapulte_autoplugin.messages.how_to_test}</h2>
+                         <pre class="autoplugin-testing-plan">${nl2br(catapulte_autoplugin.testing_plan)}</pre>
+                         <p>${catapulte_autoplugin.messages.use_fixer}</p>`
                     );
 
                 document
                     .getElementById('create-plugin-message')
                     .insertAdjacentHTML(
                         'beforeend',
-                        `<a href="${wp_autoplugin.activate_url}&plugin=${response.data}"
+                        `<a href="${catapulte_autoplugin.activate_url}&plugin=${response.data}"
                            class="button button-primary">
-                           ${wp_autoplugin.messages.activate}
+                           ${catapulte_autoplugin.messages.activate}
                          </a>`
                     );
 
@@ -268,13 +270,13 @@
                 createPluginForm.style.display = 'none';
             } else {
                 document.getElementById('create-plugin-message').innerHTML =
-                    wp_autoplugin.messages.plugin_creation_error + ' <pre>' + response.data + '</pre>';
+                    catapulte_autoplugin.messages.plugin_creation_error + ' <pre>' + response.data + '</pre>';
             }
         } catch (error) {
             loader.stop();
             createPluginForm.parentElement.classList.remove('loading');
             document.getElementById('create-plugin-message').innerHTML =
-                wp_autoplugin.messages.plugin_creation_error + ' <pre>' + error.message + '</pre>';
+                catapulte_autoplugin.messages.plugin_creation_error + ' <pre>' + error.message + '</pre>';
         }
     }
 
@@ -306,7 +308,7 @@
     wpAutoPluginCommon.handleStepChange(steps, 'generatePlan', onShowStep);
 
     // Placeholder typing effect for plugin_description
-    let messages = wp_autoplugin.plugin_examples;
+    let messages = catapulte_autoplugin.plugin_examples;
     messages.sort(() => Math.random() - 0.5);
     typingPlaceholder(document.getElementById('plugin_description'), messages);
 
@@ -446,12 +448,12 @@
         status.className = 'status-indicator generating';
         
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_generate_file');
+        formData.append('action', 'catapulte_autoplugin_generate_file');
         formData.append('file_index', currentFileIndex);
         formData.append('plugin_plan', JSON.stringify(pluginPlan));
         formData.append('project_structure', JSON.stringify(projectStructure));
         formData.append('generated_files', JSON.stringify(generatedFiles));
-        formData.append('security', wp_autoplugin.nonce);
+        formData.append('security', catapulte_autoplugin.nonce);
 
         try {
             const response = await wpAutoPluginCommon.sendRequest(formData);
@@ -562,11 +564,11 @@
         document.getElementById('review-progress-text').textContent = 'AI is reviewing the complete codebase...';
         
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_review_code');
+        formData.append('action', 'catapulte_autoplugin_review_code');
         formData.append('plugin_plan', JSON.stringify(pluginPlan));
         formData.append('project_structure', JSON.stringify(projectStructure));
         formData.append('generated_files', JSON.stringify(generatedFiles));
-        formData.append('security', wp_autoplugin.nonce);
+        formData.append('security', catapulte_autoplugin.nonce);
 
         try {
             const response = await wpAutoPluginCommon.sendRequest(formData);
@@ -701,12 +703,12 @@
         }
 
         const formData = new FormData();
-        formData.append('action', 'wp_autoplugin_generate_file');
+        formData.append('action', 'catapulte_autoplugin_generate_file');
         formData.append('file_index', fileIndex);
         formData.append('plugin_plan', JSON.stringify(pluginPlan));
         formData.append('project_structure', JSON.stringify(projectStructure));
         formData.append('generated_files', JSON.stringify(generatedFiles));
-        formData.append('security', wp_autoplugin.nonce);
+        formData.append('security', catapulte_autoplugin.nonce);
 
         try {
             const response = await wpAutoPluginCommon.sendRequest(formData);

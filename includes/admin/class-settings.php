@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin Admin Settings class.
+ * Catapulte-Autoplugin Admin Settings class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -32,47 +32,47 @@ class Settings {
 	 */
 	public function register_settings(): void {
 		// API keys - preserve existing value if empty submitted.
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openai_api_key', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_openai_api_key', [
 			'type'              => 'string',
-			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_openai_api_key' ),
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'catapulte_autoplugin_openai_api_key' ),
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_anthropic_api_key', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_anthropic_api_key', [
 			'type'              => 'string',
-			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_anthropic_api_key' ),
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'catapulte_autoplugin_anthropic_api_key' ),
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_google_api_key', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_google_api_key', [
 			'type'              => 'string',
-			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_google_api_key' ),
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'catapulte_autoplugin_google_api_key' ),
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_xai_api_key', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_xai_api_key', [
 			'type'              => 'string',
-			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_xai_api_key' ),
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'catapulte_autoplugin_xai_api_key' ),
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_openrouter_api_key', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_openrouter_api_key', [
 			'type'              => 'string',
-			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'wp_autoplugin_openrouter_api_key' ),
+			'sanitize_callback' => fn( $value ) => $this->sanitize_api_key( $value, 'catapulte_autoplugin_openrouter_api_key' ),
 		] );
 
 		// Model settings - sanitize as text fields.
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_model', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_model', [
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_planner_model', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_planner_model', [
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_coder_model', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_coder_model', [
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 		] );
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_reviewer_model', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_reviewer_model', [
 			'type'              => 'string',
 			'sanitize_callback' => 'sanitize_text_field',
 		] );
 
 		// Plugin mode - validate against allowed values.
-		register_setting( 'wp_autoplugin_settings', 'wp_autoplugin_plugin_mode', [
+		register_setting( 'catapulte_autoplugin_settings', 'catapulte_autoplugin_plugin_mode', [
 			'type'              => 'string',
 			'sanitize_callback' => [ $this, 'sanitize_plugin_mode' ],
 		] );

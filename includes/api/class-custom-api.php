@@ -5,15 +5,15 @@ declare(strict_types=1);
 /**
  * Custom API class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.2
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -107,7 +107,7 @@ class Custom_API extends OpenAI_API {
 		if ( ! is_array( $data ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Invalid response from API.', 'wp-autoplugin' )
+				__( 'Invalid response from API.', 'catapulte-autoplugin' )
 			);
 		}
 
@@ -117,7 +117,7 @@ class Custom_API extends OpenAI_API {
 		if ( empty( $data['choices'][0]['message']['content'] ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Error communicating with the API.', 'wp-autoplugin' )
+				__( 'Error communicating with the API.', 'catapulte-autoplugin' )
 			);
 		}
 

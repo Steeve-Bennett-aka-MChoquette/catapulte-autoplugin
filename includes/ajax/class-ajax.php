@@ -3,25 +3,25 @@
 declare(strict_types=1);
 
 /**
- * WP-Autoplugin Admin AJAX class.
+ * Catapulte-Autoplugin Admin AJAX class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
-use WP_Autoplugin\Ajax\Explainer;
-use WP_Autoplugin\Ajax\Extender;
-use WP_Autoplugin\Ajax\Fixer;
-use WP_Autoplugin\Ajax\Generator;
-use WP_Autoplugin\Ajax\Hooks_Extender;
-use WP_Autoplugin\Ajax\Model;
-use WP_Autoplugin\Ajax\Theme_Extender;
+use Catapulte_Autoplugin\Ajax\Explainer;
+use Catapulte_Autoplugin\Ajax\Extender;
+use Catapulte_Autoplugin\Ajax\Fixer;
+use Catapulte_Autoplugin\Ajax\Generator;
+use Catapulte_Autoplugin\Ajax\Hooks_Extender;
+use Catapulte_Autoplugin\Ajax\Model;
+use Catapulte_Autoplugin\Ajax\Theme_Extender;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -90,7 +90,7 @@ class Ajax {
 	private function register_actions(): void {
 		foreach ( self::ACTION_MAPPINGS as $methods ) {
 			foreach ( $methods as $method ) {
-				add_action( 'wp_ajax_wp_autoplugin_' . $method, [ $this, 'ajax_actions' ] );
+				add_action( 'wp_ajax_catapulte_autoplugin_' . $method, [ $this, 'ajax_actions' ] );
 			}
 		}
 	}
@@ -100,21 +100,21 @@ class Ajax {
 	 */
 	public function ajax_actions(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'catapulte-autoplugin' ) );
 		}
 
 		$action_input = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
-		$method_name  = str_replace( 'wp_autoplugin_', '', $action_input );
+		$method_name  = str_replace( 'catapulte_autoplugin_', '', $action_input );
 
 		$target_handler = $this->find_handler_for_method( $method_name );
 
 		if ( $target_handler === null ) {
-			wp_send_json_error( esc_html__( 'Invalid AJAX action.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid AJAX action.', 'catapulte-autoplugin' ) );
 		}
 
 		if ( $this->should_verify_shared_nonce( $target_handler ) ) {
-			if ( ! check_ajax_referer( 'wp_autoplugin_generate', 'security', false ) ) {
-				wp_send_json_error( esc_html__( 'Security check failed.', 'wp-autoplugin' ) );
+			if ( ! check_ajax_referer( 'catapulte_autoplugin_generate', 'security', false ) ) {
+				wp_send_json_error( esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) );
 			}
 		}
 

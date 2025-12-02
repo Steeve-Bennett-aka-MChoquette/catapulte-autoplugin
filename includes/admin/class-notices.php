@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin Admin Notices class.
+ * Catapulte-Autoplugin Admin Notices class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Class that handles showing various admin notices for WP-Autoplugin.
+ * Class that handles showing various admin notices for Catapulte-Autoplugin.
  */
 class Notices {
 
@@ -26,13 +26,13 @@ class Notices {
 	}
 
 	/**
-	 * Show any important admin notices on the WP-Autoplugin pages.
+	 * Show any important admin notices on the Catapulte-Autoplugin pages.
 	 *
 	 * @return void
 	 */
 	public function show_notices() {
 		$screen = get_current_screen();
-		if ( $screen->id !== 'toplevel_page_wp-autoplugin' ) {
+		if ( $screen->id !== 'toplevel_page_catapulte-autoplugin' ) {
 			return;
 		}
 
@@ -44,8 +44,8 @@ class Notices {
 					<?php
 					echo wp_kses_post(
 						__(
-							'The <code>DISALLOW_FILE_MODS</code> constant is defined in your wp-config.php file, which prevents WP-Autoplugin from installing or updating plugins on your site.',
-							'wp-autoplugin'
+							'The <code>DISALLOW_FILE_MODS</code> constant is defined in your wp-config.php file, which prevents Catapulte-Autoplugin from installing or updating plugins on your site.',
+							'catapulte-autoplugin'
 						)
 					);
 					?>
@@ -55,25 +55,25 @@ class Notices {
 		}
 
 		// Fatal error notice from plugin activation.
-		$error = get_option( 'wp_autoplugin_fatal_error' );
+		$error = get_option( 'catapulte_autoplugin_fatal_error' );
 		if ( $error && is_array( $error ) ) {
 			$fix_url = add_query_arg(
 				[
-					'nonce'         => wp_create_nonce( 'wp-autoplugin-fix-plugin' ),
+					'nonce'         => wp_create_nonce( 'catapulte-autoplugin-fix-plugin' ),
 					'plugin'        => rawurlencode( $error['plugin'] ),
 					'error_message' => rawurlencode( $error['error'] ),
 				],
-				admin_url( 'admin.php?page=wp-autoplugin-fix' )
+				admin_url( 'admin.php?page=catapulte-autoplugin-fix' )
 			);
 			?>
 			<div class="notice notice-error">
-				<p><?php echo esc_html__( 'The plugin could not be activated due to a fatal error.', 'wp-autoplugin' ); ?></p>
+				<p><?php echo esc_html__( 'The plugin could not be activated due to a fatal error.', 'catapulte-autoplugin' ); ?></p>
 				<pre><?php echo esc_html( $error['error'] ); ?></pre>
 				<p>
 					<?php
 					printf(
 						/* translators: 1: fix link start tag, 2: fix link end tag */
-						esc_html__( 'You can %1$sfix the error automatically%2$s.', 'wp-autoplugin' ),
+						esc_html__( 'You can %1$sfix the error automatically%2$s.', 'catapulte-autoplugin' ),
 						'<a href="' . esc_url( $fix_url ) . '">',
 						'</a>'
 					);
@@ -81,11 +81,11 @@ class Notices {
 				</p>
 			</div>
 			<?php
-			delete_option( 'wp_autoplugin_fatal_error' );
+			delete_option( 'catapulte_autoplugin_fatal_error' );
 		}
 
-		// Show any other notices stored in wp_autoplugin_notices.
-		$notices = get_option( 'wp_autoplugin_notices', [] );
+		// Show any other notices stored in catapulte_autoplugin_notices.
+		$notices = get_option( 'catapulte_autoplugin_notices', [] );
 		foreach ( $notices as $notice ) {
 			?>
 			<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible">
@@ -93,7 +93,7 @@ class Notices {
 			</div>
 			<?php
 		}
-		delete_option( 'wp_autoplugin_notices' );
+		delete_option( 'catapulte_autoplugin_notices' );
 	}
 
 	/**
@@ -105,11 +105,11 @@ class Notices {
 	 * @return void
 	 */
 	public static function add_notice( $message, $type = 'error' ) {
-		$notices   = get_option( 'wp_autoplugin_notices', [] );
+		$notices   = get_option( 'catapulte_autoplugin_notices', [] );
 		$notices[] = [
 			'message' => $message,
 			'type'    => $type,
 		];
-		update_option( 'wp_autoplugin_notices', $notices );
+		update_option( 'catapulte_autoplugin_notices', $notices );
 	}
 }

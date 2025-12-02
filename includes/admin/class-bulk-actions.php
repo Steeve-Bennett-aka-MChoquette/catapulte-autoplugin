@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin Admin Bulk Actions class.
+ * Catapulte-Autoplugin Admin Bulk Actions class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
-use WP_Autoplugin\Plugin_Installer;
+use Catapulte_Autoplugin\Plugin_Installer;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,22 +35,22 @@ class Bulk_Actions {
 	}
 
 	/**
-	 * Process the bulk action if on the WP-Autoplugin page.
+	 * Process the bulk action if on the Catapulte-Autoplugin page.
 	 *
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		if ( ! is_admin() || empty( $_GET['page'] ) || $_GET['page'] !== 'wp-autoplugin' || empty( $_REQUEST['action'] ) ) {
+		if ( ! is_admin() || empty( $_GET['page'] ) || $_GET['page'] !== 'catapulte-autoplugin' || empty( $_REQUEST['action'] ) ) {
 			return;
 		}
 
 		$nonce_value = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : '';
-		if ( ! $nonce_value || ! wp_verify_nonce( $nonce_value, 'wp-autoplugin-activate-plugin' ) ) {
-			wp_die( esc_html__( 'Security check failed.', 'wp-autoplugin' ) );
+		if ( ! $nonce_value || ! wp_verify_nonce( $nonce_value, 'catapulte-autoplugin-activate-plugin' ) ) {
+			wp_die( esc_html__( 'Security check failed.', 'catapulte-autoplugin' ) );
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wp-autoplugin' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'catapulte-autoplugin' ) );
 		}
 
 		$installer = Plugin_Installer::get_instance();

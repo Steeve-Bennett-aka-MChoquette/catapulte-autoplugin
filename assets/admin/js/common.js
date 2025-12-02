@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    const supportedImageModels = Array.isArray(window.wp_autoplugin?.supported_image_models)
-        ? window.wp_autoplugin.supported_image_models
+    const supportedImageModels = Array.isArray(window.catapulte_autoplugin?.supported_image_models)
+        ? window.catapulte_autoplugin.supported_image_models
         : [];
     const supportedImageModelsNormalized = supportedImageModels.map((model) => (typeof model === 'string' ? model.toLowerCase().trim() : ''));
 
@@ -277,7 +277,7 @@
     }
 
     async function sendRequest(formData) {
-        const response = await fetch(wp_autoplugin.ajax_url, {
+        const response = await fetch(catapulte_autoplugin.ajax_url, {
             method: 'POST',
             body: formData
         });
@@ -491,7 +491,7 @@
         renderAttachments();
 
         const dropOverlayText = options.dropOverlayText
-            || window.wp_autoplugin?.messages?.drop_files_to_attach
+            || window.catapulte_autoplugin?.messages?.drop_files_to_attach
             || 'Drop files to attach';
 
         function isWrapperVisible() {

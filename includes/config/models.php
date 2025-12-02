@@ -1,8 +1,8 @@
 <?php
 /**
- * Default model configuration for WP-Autoplugin.
+ * Default model configuration for Catapulte-Autoplugin.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 return apply_filters(
-	'wp_autoplugin_models',
+	'catapulte_autoplugin_models',
 	[
 		'OpenAI'    => [
 			'gpt-5'             => 'GPT-5',

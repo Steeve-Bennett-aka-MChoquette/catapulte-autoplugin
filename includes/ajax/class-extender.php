@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin AJAX Extender class.
+ * Catapulte-Autoplugin AJAX Extender class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
-use WP_Autoplugin\Plugin_Extender;
-use WP_Autoplugin\Plugin_Installer;
-use WP_Autoplugin\AI_Utils;
+use Catapulte_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Plugin_Extender;
+use Catapulte_Autoplugin\Plugin_Installer;
+use Catapulte_Autoplugin\AI_Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -122,7 +122,7 @@ class Extender {
 			: '';
 
 		$planner_api   = $this->admin->api_handler->get_planner_api();
-		$extender      = new \WP_Autoplugin\Plugin_Extender( $planner_api );
+		$extender      = new \Catapulte_Autoplugin\Plugin_Extender( $planner_api );
 		$prompt_images = isset( $_POST['prompt_images'] ) ? AI_Utils::parse_prompt_images( $_POST['prompt_images'] ) : [];
 		$plan_data     = $extender->plan_plugin_extension( $codebase['files'], $problem, $prompt_images );
 		if ( is_wp_error( $plan_data ) ) {
@@ -133,7 +133,7 @@ class Extender {
 		$token_usage = $planner_api->get_last_token_usage();
 
 		// Strip code fences if model returns ```json blocks.
-		$plan_data = \WP_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
+		$plan_data = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
 
 		wp_send_json_success(
 			[
@@ -163,7 +163,7 @@ class Extender {
 			: '';
 
 		$coder_api = $this->admin->api_handler->get_coder_api();
-		$extender  = new \WP_Autoplugin\Plugin_Extender( $coder_api );
+		$extender  = new \Catapulte_Autoplugin\Plugin_Extender( $coder_api );
 		$code      = $extender->extend_plugin( $codebase['files'], $problem, $ai_description, $codebase['is_complex'] );
 
 		// Get token usage from the actual API that was used.
@@ -203,17 +203,17 @@ class Extender {
 		$generated_files_array   = json_decode( $generated_files, true );
 
 		if ( ! $project_structure_array || ! isset( $project_structure_array['files'] ) ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		$files = $project_structure_array['files'];
 		if ( ! isset( $files[ $file_index ] ) ) {
-			wp_send_json_error( esc_html__( 'File index out of range.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'File index out of range.', 'catapulte-autoplugin' ) );
 		}
 
 		$file_info    = $files[ $file_index ];
 		$coder_api    = $this->admin->api_handler->get_coder_api();
-		$extender     = new \WP_Autoplugin\Plugin_Extender( $coder_api );
+		$extender     = new \Catapulte_Autoplugin\Plugin_Extender( $coder_api );
 		$file_content = $extender->extend_single_file( $codebase['files'], $plugin_plan, $project_structure_array, is_array( $generated_files_array ) ? $generated_files_array : [], $file_info );
 		if ( is_wp_error( $file_content ) ) {
 			wp_send_json_error( $file_content->get_error_message() );
@@ -221,7 +221,7 @@ class Extender {
 
 		// Strip out code fences.
 		$file_type    = isset( $file_info['type'] ) ? $file_info['type'] : 'php';
-		$file_content = \WP_Autoplugin\AI_Utils::strip_code_fences( $file_content );
+		$file_content = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $file_content );
 
 		$token_usage = $coder_api->get_last_token_usage();
 

@@ -3,17 +3,17 @@
 declare(strict_types=1);
 
 /**
- * WP-Autoplugin Admin class.
+ * Catapulte-Autoplugin Admin class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.0.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin\Admin;
+namespace Catapulte_Autoplugin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -51,24 +51,24 @@ class Admin {
 	 * @return array<string, array<string, string>>
 	 */
 	public static function get_models(): array {
-		return include WP_AUTOPLUGIN_DIR . 'includes/config/models.php';
+		return include CATAPULTE_AUTOPLUGIN_DIR . 'includes/config/models.php';
 	}
 
 	/**
-	 * Output a simple admin footer for WP-Autoplugin pages.
+	 * Output a simple admin footer for Catapulte-Autoplugin pages.
 	 */
 	public function output_admin_footer(): void {
 		// Get the API handler to fetch the next task model.
 		$next_task_model = $this->api_handler->get_next_task_model();
 		?>
-		<div id="wp-autoplugin-footer">
+		<div id="catapulte-autoplugin-footer">
 			<div class="footer-left">
 				<span class="credits">
 					<?php
 					printf(
 						// translators: %s: version number.
-						esc_html__( 'WP-Autoplugin v%s', 'wp-autoplugin' ),
-						esc_html( WP_AUTOPLUGIN_VERSION )
+						esc_html__( 'Catapulte-Autoplugin v%s', 'catapulte-autoplugin' ),
+						esc_html( CATAPULTE_AUTOPLUGIN_VERSION )
 					);
 					?>
 				</span>
@@ -78,7 +78,7 @@ class Admin {
 						<?php
 						$translated_model_string = wp_kses(
 							// translators: %s: model name.
-							__( 'Model: %s', 'wp-autoplugin' ),
+							__( 'Model: %s', 'catapulte-autoplugin' ),
 							[ 'code' => [] ]
 						);
 						printf(
@@ -86,18 +86,18 @@ class Admin {
 							'<code>' . esc_html( $next_task_model ) . '</code>'
 						);
 						?>
-						<a href="#" id="change-model-link" style="text-decoration: none;"><?php esc_html_e( '(Change)', 'wp-autoplugin' ); ?></a>
+						<a href="#" id="change-model-link" style="text-decoration: none;"><?php esc_html_e( '(Change)', 'catapulte-autoplugin' ); ?></a>
 					</span>
 				</span>
 			</div>
 			<div class="footer-right">
-				<span id="token-display" style="display: none; cursor: pointer;" title="<?php esc_attr_e( 'Click for token usage breakdown', 'wp-autoplugin' ); ?>">
+				<span id="token-display" style="display: none; cursor: pointer;" title="<?php esc_attr_e( 'Click for token usage breakdown', 'catapulte-autoplugin' ); ?>">
 					<span id="token-input">0</span> IN | <span id="token-output">0</span> OUT
 				</span>
 			</div>
 		</div>
 
 		<?php
-		include WP_AUTOPLUGIN_DIR . 'views/footer-modal.php';
+		include CATAPULTE_AUTOPLUGIN_DIR . 'views/footer-modal.php';
 	}
 }

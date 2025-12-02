@@ -1,5 +1,5 @@
 {
-    "name": "wp-autoplugin/wp-autoplugin",
+    "name": "catapulte-autoplugin/catapulte-autoplugin",
     "description": "A WordPress plugin that generates other plugins on-demand using AI.",
     "type": "wordpress-plugin",
     "license": "GPLv2",

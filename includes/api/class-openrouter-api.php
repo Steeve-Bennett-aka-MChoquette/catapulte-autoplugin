@@ -7,15 +7,15 @@ declare(strict_types=1);
  *
  * Handles communication with the OpenRouter API.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.8.0
  * @version 2.0.0
- * @link https://wp-autoplugin.com
+ * @link https://catapulte-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-namespace WP_Autoplugin;
+namespace Catapulte_Autoplugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -96,7 +96,7 @@ class OpenRouter_API extends OpenAI_API {
 			'Authorization' => 'Bearer ' . $this->api_key,
 			'Content-Type'  => 'application/json',
 			'HTTP-Referer'  => esc_url( home_url() ),
-			'X-Title'       => 'WP-Autoplugin',
+			'X-Title'       => 'Catapulte-Autoplugin',
 		];
 	}
 
@@ -140,7 +140,7 @@ class OpenRouter_API extends OpenAI_API {
 		if ( ! is_array( $data ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Invalid response from API.', 'wp-autoplugin' )
+				__( 'Invalid response from API.', 'catapulte-autoplugin' )
 			);
 		}
 
@@ -196,7 +196,7 @@ class OpenRouter_API extends OpenAI_API {
 		if ( ! isset( $new_data['choices'][0]['message']['content'] ) ) {
 			return new \WP_Error(
 				'api_error',
-				__( 'Error communicating with the API.', 'wp-autoplugin' )
+				__( 'Error communicating with the API.', 'catapulte-autoplugin' )
 			);
 		}
 

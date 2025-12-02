@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 /**
- * WP-Autoplugin AJAX Theme Extender class.
+ * Catapulte-Autoplugin AJAX Theme Extender class.
  *
- * @package WP-Autoplugin
+ * @package Catapulte-Autoplugin
  * @since 1.5
  * @version 2.0.1
  */
 
-namespace WP_Autoplugin\Ajax;
+namespace Catapulte_Autoplugin\Ajax;
 
-use WP_Autoplugin\Admin\Admin;
+use Catapulte_Autoplugin\Admin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -42,16 +42,16 @@ class Theme_Extender {
 	 */
 	public function extract_theme_hooks() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'catapulte-autoplugin' ) );
 		}
-		check_ajax_referer( 'wp_autoplugin_generate', 'security' );
+		check_ajax_referer( 'catapulte_autoplugin_generate', 'security' );
 
 		$theme_slug = isset( $_POST['theme_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) ) : '';
 		if ( empty( $theme_slug ) ) {
-			wp_send_json_error( esc_html__( 'No theme slug specified.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'No theme slug specified.', 'catapulte-autoplugin' ) );
 		}
 
-		$hooks = \WP_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
+		$hooks = \Catapulte_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
 		wp_send_json_success( $hooks ); // Returns empty array if no hooks found.
 	}
 
@@ -62,18 +62,18 @@ class Theme_Extender {
 	 */
 	public function generate_extend_theme_plan() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'catapulte-autoplugin' ) );
 		}
-		check_ajax_referer( 'wp_autoplugin_generate', 'security' );
+		check_ajax_referer( 'catapulte_autoplugin_generate', 'security' );
 
 		if ( ! isset( $_POST['theme_slug'] ) || ! isset( $_POST['theme_issue'] ) ) {
-			wp_send_json_error( esc_html__( 'Missing required parameters.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Missing required parameters.', 'catapulte-autoplugin' ) );
 		}
 
 		$theme_slug = sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) );
-		$hooks      = \WP_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
+		$hooks      = \Catapulte_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
 		if ( empty( $hooks ) ) {
-			wp_send_json_error( esc_html__( 'No hooks found in the theme.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'No hooks found in the theme.', 'catapulte-autoplugin' ) );
 		}
 
 		// Get original theme name.
@@ -82,18 +82,18 @@ class Theme_Extender {
 
 		$theme_changes = sanitize_text_field( wp_unslash( $_POST['theme_issue'] ) );
 		$planner_api   = $this->admin->api_handler->get_planner_api();
-		$extender      = new \WP_Autoplugin\Hooks_Extender( $planner_api );
-		$prompt_images = isset( $_POST['prompt_images'] ) ? \WP_Autoplugin\AI_Utils::parse_prompt_images( $_POST['prompt_images'] ) : [];
+		$extender      = new \Catapulte_Autoplugin\Hooks_Extender( $planner_api );
+		$prompt_images = isset( $_POST['prompt_images'] ) ? \Catapulte_Autoplugin\AI_Utils::parse_prompt_images( $_POST['prompt_images'] ) : [];
 		$plan_data     = $extender->plan_theme_hooks_extension( $original_theme_name, $hooks, $theme_changes, $prompt_images );
 		if ( is_wp_error( $plan_data ) ) {
 			wp_send_json_error( $plan_data->get_error_message() );
 		}
 
 		// Strip out any code block fences like ```json ... ```.
-		$plan_data  = \WP_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
+		$plan_data  = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $plan_data, 'json' );
 		$plan_array = json_decode( $plan_data, true );
 		if ( ! $plan_array ) {
-			wp_send_json_error( esc_html__( 'Failed to decode the generated plan.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Failed to decode the generated plan.', 'catapulte-autoplugin' ) );
 		}
 
 		// Get token usage from the actual API that was used.
@@ -114,17 +114,17 @@ class Theme_Extender {
 	 */
 	public function generate_extend_theme_code() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'catapulte-autoplugin' ) );
 		}
-		check_ajax_referer( 'wp_autoplugin_generate', 'security' );
+		check_ajax_referer( 'catapulte_autoplugin_generate', 'security' );
 
 		if ( ! isset( $_POST['theme_slug'] ) || ! isset( $_POST['theme_plan'] ) || ! isset( $_POST['hooks'] ) ) {
-			wp_send_json_error( esc_html__( 'Missing required parameters.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Missing required parameters.', 'catapulte-autoplugin' ) );
 		}
 
 		$theme_slug  = sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) );
 		$ai_plan     = sanitize_text_field( wp_unslash( $_POST['theme_plan'] ) );
-		$hooks       = \WP_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
+		$hooks       = \Catapulte_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
 		$hooks_param = json_decode( sanitize_text_field( wp_unslash( $_POST['hooks'] ) ), true );
 
 		// The $hooks_param is an array of hook names. Keep only the hooks that are in the plan.
@@ -142,7 +142,7 @@ class Theme_Extender {
 		$original_theme_name = $theme_data->get( 'Name' );
 
 		$coder_api = $this->admin->api_handler->get_coder_api();
-		$extender  = new \WP_Autoplugin\Hooks_Extender( $coder_api );
+		$extender  = new \Catapulte_Autoplugin\Hooks_Extender( $coder_api );
 		$code      = $extender->generate_theme_extension_code( $original_theme_name, $hooks, $ai_plan, $plugin_name );
 
 		if ( is_wp_error( $code ) ) {
@@ -150,7 +150,7 @@ class Theme_Extender {
 		}
 
 		// Strip out code fences like ```php ... ```.
-		$code = \WP_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
+		$code = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $code, 'php' );
 
 		// Get token usage from the actual API that was used.
 		$token_usage = $coder_api->get_last_token_usage();
@@ -176,9 +176,9 @@ class Theme_Extender {
 	 */
 	public function generate_extend_theme_file() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'catapulte-autoplugin' ) );
 		}
-		check_ajax_referer( 'wp_autoplugin_generate', 'security' );
+		check_ajax_referer( 'catapulte_autoplugin_generate', 'security' );
 
 		$theme_slug        = isset( $_POST['theme_slug'] ) ? sanitize_text_field( wp_unslash( $_POST['theme_slug'] ) ) : '';
 		$file_index        = isset( $_POST['file_index'] ) ? intval( wp_unslash( $_POST['file_index'] ) ) : 0;
@@ -193,16 +193,16 @@ class Theme_Extender {
 		$hook_names              = json_decode( $hooks_param, true );
 
 		if ( ! $project_structure_array || ! isset( $project_structure_array['files'] ) || ! $theme_plan_array ) {
-			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'Invalid input data.', 'catapulte-autoplugin' ) );
 		}
 
 		$files = $project_structure_array['files'];
 		if ( ! isset( $files[ $file_index ] ) ) {
-			wp_send_json_error( esc_html__( 'File index out of range.', 'wp-autoplugin' ) );
+			wp_send_json_error( esc_html__( 'File index out of range.', 'catapulte-autoplugin' ) );
 		}
 
 		// Load hooks for this theme and filter to selected ones.
-		$all_hooks      = \WP_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
+		$all_hooks      = \Catapulte_Autoplugin\Hooks_Extender::get_theme_hooks( $theme_slug );
 		$selected_hooks = [];
 		if ( is_array( $hook_names ) && ! empty( $hook_names ) ) {
 			$selected_hooks = array_values(
@@ -222,7 +222,7 @@ class Theme_Extender {
 		$original_theme_name = $theme_data->get( 'Name' );
 
 		$coder_api    = $this->admin->api_handler->get_coder_api();
-		$extender     = new \WP_Autoplugin\Hooks_Extender( $coder_api );
+		$extender     = new \Catapulte_Autoplugin\Hooks_Extender( $coder_api );
 		$file_info    = $files[ $file_index ];
 		$file_content = $extender->generate_theme_extension_file( $original_theme_name, $selected_hooks, $file_info, $project_structure_array, $theme_plan_array, is_array( $generated_files_array ) ? $generated_files_array : [] );
 
@@ -231,7 +231,7 @@ class Theme_Extender {
 		}
 
 		$file_type    = isset( $file_info['type'] ) ? $file_info['type'] : 'php';
-		$file_content = \WP_Autoplugin\AI_Utils::strip_code_fences( $file_content );
+		$file_content = \Catapulte_Autoplugin\AI_Utils::strip_code_fences( $file_content );
 
 		$token_usage = $coder_api->get_last_token_usage();
 
