@@ -74,6 +74,8 @@ return apply_filters(
 		],
 		'OpenRouter' => [
 			// === BUDGET - DeepSeek (très économique) ===
+			'deepseek/deepseek-v3.2'                       => '💰 DeepSeek V3.2',
+			'deepseek/deepseek-v3.2-exp'                   => '💰 DeepSeek V3.2 Exp',
 			'deepseek/deepseek-chat-v3-0324'               => '💰 DeepSeek V3 0324',
 			'deepseek/deepseek-chat-v3.1'                  => '💰 DeepSeek V3.1',
 			'deepseek/deepseek-r1'                         => '💰 DeepSeek R1',
