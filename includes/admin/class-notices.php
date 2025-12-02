@@ -32,7 +32,7 @@ class Notices {
 	 */
 	public function show_notices() {
 		$screen = get_current_screen();
-		if ( $screen->id !== 'toplevel_page_catapulte-autoplugin' ) {
+		if ( ! $screen || $screen->id !== 'toplevel_page_catapulte-autoplugin' ) {
 			return;
 		}
 
