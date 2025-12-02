@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * The xAI API class. Their API is compatible with OpenAI's, so this class extends OpenAI_API.
  *
  * @package WP-Autoplugin
  * @since 1.1
- * @version 1.1
+ * @version 2.0.0
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,41 +25,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 class XAI_API extends OpenAI_API {
 
 	/**
-	 * Selected model.
-	 *
-	 * @var string
-	 */
-	protected $model;
-
-	/**
 	 * API URL.
-	 *
-	 * @var string
 	 */
-	protected $api_url = 'https://api.x.ai/v1/chat/completions';
+	protected string $api_url = 'https://api.x.ai/v1/chat/completions';
 
 	/**
 	 * Max tokens parameter.
-	 *
-	 * @var int
 	 */
-	protected $max_tokens = 8192;
+	protected int $max_tokens = 8192;
 
 	/**
-	 * A more simple model setter.
-	 *
-	 * @param string $model The model.
+	 * A simpler model setter for xAI.
 	 */
-	public function set_model( $model ) {
-		$this->model = sanitize_text_field( $model );
+	public function set_model( string $model ): void {
+		$this->model          = sanitize_text_field( $model );
+		$this->original_model = $this->model;
 	}
 
 	/**
-	 * Get the allowed parameters.
+	 * Get the allowed parameters for xAI.
 	 *
-	 * @return array
+	 * @return array<int, string>
 	 */
-	protected function get_allowed_parameters() {
+	protected function get_allowed_parameters(): array {
 		return [
 			'model',
 			'temperature',

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * OpenAI Responses API class.
  *
@@ -6,7 +9,7 @@
  *
  * @package WP-Autoplugin
  * @since 1.7.0
- * @version 1.7.0
+ * @version 2.0.0
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,45 +28,39 @@ class OpenAI_Responses_API extends OpenAI_API {
 
 	/**
 	 * API URL.
-	 *
-	 * @var string
 	 */
-	protected $api_url = 'https://api.openai.com/v1/responses';
+	protected string $api_url = 'https://api.openai.com/v1/responses';
 
 	/**
 	 * Send a prompt to the API.
-	 *
-	 * @param string $prompt The prompt.
-	 * @param string $system_message The system message.
-	 * @param array  $override_body The override body.
-	 *
-	 * @return string|\WP_Error
 	 */
-	public function send_prompt( $prompt, $system_message = '', $override_body = [] ) {
+	public function send_prompt(
+		string $prompt,
+		string $system_message = '',
+		array $override_body = []
+	): string|\WP_Error {
 		$body = [
 			'model' => $this->model,
 			'input' => $prompt,
 		];
 
-		if ( ! empty( $system_message ) ) {
+		if ( $system_message !== '' ) {
 			$body['instructions'] = $system_message;
 		}
 
 		// Responses API uses max_output_tokens for output limits.
-		if ( ! empty( $this->max_tokens ) ) {
+		if ( $this->max_tokens > 0 ) {
 			$body['max_output_tokens'] = $this->max_tokens;
 		}
 
-		if ( ! empty( $this->reasoning_effort ) ) {
+		if ( $this->reasoning_effort !== '' ) {
 			$body['reasoning'] = [
 				'effort' => $this->reasoning_effort,
 			];
 		}
 
-		// Ignore response_format for the Responses API (incompatible with text.format expectations).
-		if ( isset( $override_body['response_format'] ) ) {
-			unset( $override_body['response_format'] );
-		}
+		// Remove incompatible parameters.
+		unset( $override_body['response_format'] );
 
 		// Keep only allowed keys in the override body.
 		$allowed_keys  = $this->get_allowed_parameters();
@@ -73,11 +70,8 @@ class OpenAI_Responses_API extends OpenAI_API {
 		$response = wp_remote_post(
 			$this->api_url,
 			[
-				'timeout' => 300,
-				'headers' => [
-					'Authorization' => 'Bearer ' . $this->api_key,
-					'Content-Type'  => 'application/json',
-				],
+				'timeout' => static::DEFAULT_TIMEOUT,
+				'headers' => $this->get_request_headers(),
 				'body'    => wp_json_encode( $body ),
 			]
 		);
@@ -86,22 +80,39 @@ class OpenAI_Responses_API extends OpenAI_API {
 			return $response;
 		}
 
-		$body = wp_remote_retrieve_body( $response );
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
-		$data = json_decode( $body, true );
+		if ( ! is_array( $data ) ) {
+			return new \WP_Error(
+				'api_error',
+				__( 'Invalid response from API.', 'wp-autoplugin' )
+			);
+		}
 
 		if ( isset( $data['error'] ) ) {
-			$message = isset( $data['error']['message'] ) ? $data['error']['message'] : __( 'Error communicating with the API.', 'wp-autoplugin' );
+			$message = $data['error']['message']
+				?? __( 'Error communicating with the API.', 'wp-autoplugin' );
 			return new \WP_Error( 'api_error', $message );
 		}
 
 		// Extract token usage for reporting.
 		$this->last_token_usage = $this->extract_token_usage( $data, 'openai' );
 
-		if ( isset( $data['output_text'] ) && ! empty( $data['output_text'] ) ) {
+		return $this->extract_responses_content( $data );
+	}
+
+	/**
+	 * Extract content from the Responses API format.
+	 *
+	 * @param array<string, mixed> $data
+	 */
+	private function extract_responses_content( array $data ): string|\WP_Error {
+		// Try direct output_text first.
+		if ( isset( $data['output_text'] ) && $data['output_text'] !== '' ) {
 			return $data['output_text'];
 		}
 
+		// Try extracting from output array.
 		if ( isset( $data['output'] ) && is_array( $data['output'] ) ) {
 			$output_text = '';
 
@@ -111,26 +122,32 @@ class OpenAI_Responses_API extends OpenAI_API {
 				}
 
 				foreach ( $item['content'] as $content_item ) {
-					if ( isset( $content_item['type'], $content_item['text'] ) && 'output_text' === $content_item['type'] ) {
+					if (
+						isset( $content_item['type'], $content_item['text'] )
+						&& $content_item['type'] === 'output_text'
+					) {
 						$output_text .= $content_item['text'];
 					}
 				}
 			}
 
-			if ( ! empty( $output_text ) ) {
+			if ( $output_text !== '' ) {
 				return $output_text;
 			}
 		}
 
-		return new \WP_Error( 'api_error', 'Error communicating with the API.' . "\n" . print_r( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+		return new \WP_Error(
+			'api_error',
+			__( 'Error communicating with the API.', 'wp-autoplugin' )
+		);
 	}
 
 	/**
-	 * Get the allowed parameters.
+	 * Get the allowed parameters for the Responses API.
 	 *
-	 * @return array The allowed parameters.
+	 * @return array<int, string>
 	 */
-	protected function get_allowed_parameters() {
+	protected function get_allowed_parameters(): array {
 		return [
 			'model',
 			'instructions',

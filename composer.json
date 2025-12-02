@@ -5,14 +5,21 @@
     "license": "GPLv2",
     "authors": [
         {
-            "name": "Balazs Piller",
-            "email": "hello@wp-autoplugin.com"
+            "name": "Martin Choquette Scott",
+            "email": "mchoquette@catapultcommunication.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=8.1"
+    },
     "autoload": {
         "classmap": [
             "includes/"
         ]
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        }
     }
 }

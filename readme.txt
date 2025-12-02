@@ -1,11 +1,11 @@
 === WP-Autoplugin ===
-Contributors: balazspiller
-Donate link: https://wp-autoplugin.com
+Contributors: martinchoquettescott
+Donate link: https://catapultcommunication.com
 Tags: ai, plugin generator, development, wordpress, automation
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 1.7
-Requires PHP: 7.4
+Stable tag: 2.0.0
+Requires PHP: 8.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 

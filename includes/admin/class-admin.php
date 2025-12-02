@@ -1,18 +1,19 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * WP-Autoplugin Admin class.
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 1.4.3
+ * @version 2.0.0
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 namespace WP_Autoplugin\Admin;
-
-use WP_Autoplugin\Admin\Ajax;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,15 +26,11 @@ class Admin {
 
 	/**
 	 * The API handler instance.
-	 *
-	 * @var Api_Handler
 	 */
-	public $api_handler;
+	public readonly Api_Handler $api_handler;
 
 	/**
 	 * Constructor: set up API, instantiate sub-classes.
-	 *
-	 * @return void
 	 */
 	public function __construct() {
 		// Instantiate other admin components (each handles its own hooks).
@@ -51,18 +48,16 @@ class Admin {
 	/**
 	 * The built-in models.
 	 *
-	 * @var array
+	 * @return array<string, array<string, string>>
 	 */
-	public static function get_models() {
+	public static function get_models(): array {
 		return include WP_AUTOPLUGIN_DIR . 'includes/config/models.php';
 	}
 
 	/**
 	 * Output a simple admin footer for WP-Autoplugin pages.
-	 *
-	 * @return void
 	 */
-	public function output_admin_footer() {
+	public function output_admin_footer(): void {
 		// Get the API handler to fetch the next task model.
 		$next_task_model = $this->api_handler->get_next_task_model();
 		?>

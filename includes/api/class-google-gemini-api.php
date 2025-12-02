@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Google Gemini API class.
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 1.0.5
+ * @version 2.0.0
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,56 +25,116 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Google_Gemini_API extends API {
 
 	/**
-	 * Selected model.
-	 *
-	 * @var string
+	 * Base API URL.
 	 */
-	private $model;
+	private const API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/';
+
+	/**
+	 * Default timeout in seconds.
+	 */
+	private const DEFAULT_TIMEOUT = 300;
+
+	/**
+	 * Selected model.
+	 */
+	private string $model = '';
 
 	/**
 	 * Temperature parameter.
-	 *
-	 * @var float
 	 */
-	private $temperature = 0.2;
+	private float $temperature = 0.2;
 
 	/**
 	 * Max tokens parameter.
-	 *
-	 * @var int
 	 */
-	private $max_tokens = 8192;
+	private int $max_tokens = 8192;
 
 	/**
 	 * Set the model.
-	 *
-	 * @param string $model The model.
 	 */
-	public function set_model( $model ) {
+	public function set_model( string $model ): void {
 		$this->model = sanitize_text_field( $model );
 	}
 
 	/**
 	 * Send a prompt to the API.
-	 *
-	 * @param string $prompt         The prompt.
-	 * @param string $system_message The system message.
-	 * @param array  $override_body  The override body.
-	 * @return mixed
 	 */
-	public function send_prompt( $prompt, $system_message = '', $override_body = [] ) {
-		$url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $this->model . ':generateContent?key=' . $this->api_key;
+	public function send_prompt(
+		string $prompt,
+		string $system_message = '',
+		array $override_body = []
+	): string|\WP_Error {
+		// SECURITY FIX: Use Authorization header instead of URL query parameter.
+		$url = self::API_BASE_URL . $this->model . ':generateContent';
 
-		// Set max tokens for Gemini 2.5 Flash & Pro.
-		$max_tokens = $this->max_tokens;
+		$max_tokens = $this->get_max_tokens_for_model();
+
+		$body = $this->build_request_body( $prompt, $max_tokens, $override_body );
+
+		$response = wp_remote_post(
+			$url,
+			[
+				'timeout' => self::DEFAULT_TIMEOUT,
+				'headers' => [
+					'Content-Type'  => 'application/json',
+					'x-goog-api-key' => $this->api_key,
+				],
+				'body'    => wp_json_encode( $body ),
+			]
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( ! is_array( $data ) || ! isset( $data['candidates'][0] ) ) {
+			return new \WP_Error(
+				'api_error',
+				__( 'Error communicating with the Google Gemini API.', 'wp-autoplugin' )
+			);
+		}
+
+		$candidate = $data['candidates'][0];
+
+		if ( ! isset( $candidate['content']['parts'] ) ) {
+			return new \WP_Error(
+				'api_error',
+				__( 'Error communicating with the Google Gemini API.', 'wp-autoplugin' )
+			);
+		}
+
+		$parts     = $candidate['content']['parts'];
+		$last_part = end( $parts );
+
+		// Extract token usage.
+		$this->last_token_usage = $this->extract_token_usage( $data, 'google' );
+
+		return $last_part['text'] ?? '';
+	}
+
+	/**
+	 * Get max tokens for the current model.
+	 */
+	private function get_max_tokens_for_model(): int {
 		if (
 			stripos( $this->model, 'gemini-2.5-pro' ) !== false ||
 			stripos( $this->model, 'gemini-2.5-flash' ) !== false
 		) {
-			$max_tokens = 65535;
+			return 65535;
 		}
 
-		// Default safetySettings.
+		return $this->max_tokens;
+	}
+
+	/**
+	 * Build the request body.
+	 *
+	 * @param array<string, mixed> $override_body
+	 * @return array<string, mixed>
+	 */
+	private function build_request_body( string $prompt, int $max_tokens, array $override_body ): array {
 		$safety_settings = [
 			[
 				'category'  => 'HARM_CATEGORY_DANGEROUS_CONTENT',
@@ -79,13 +142,12 @@ class Google_Gemini_API extends API {
 			],
 		];
 
-		// Default generationConfig.
 		$generation_config = [
 			'temperature'     => $this->temperature,
 			'maxOutputTokens' => $max_tokens,
 		];
 
-		// Merge override_body['generationConfig'] into $generation_config.
+		// Merge override generationConfig.
 		if ( isset( $override_body['generationConfig'] ) && is_array( $override_body['generationConfig'] ) ) {
 			$generation_config = array_merge( $generation_config, $override_body['generationConfig'] );
 			unset( $override_body['generationConfig'] );
@@ -97,7 +159,7 @@ class Google_Gemini_API extends API {
 			unset( $override_body['safetySettings'] );
 		}
 
-		// Determine contents (supports multimodal override).
+		// Determine contents.
 		if ( isset( $override_body['contents'] ) && is_array( $override_body['contents'] ) ) {
 			$contents = $override_body['contents'];
 			unset( $override_body['contents'] );
@@ -111,12 +173,9 @@ class Google_Gemini_API extends API {
 			];
 		}
 
-		// Strip off response_format if present (not supported by Gemini).
-		if ( isset( $override_body['response_format'] ) ) {
-			unset( $override_body['response_format'] );
-		}
+		// Remove unsupported parameters.
+		unset( $override_body['response_format'] );
 
-		// Build the request body.
 		$body = [
 			'contents'         => $contents,
 			'safetySettings'   => $safety_settings,
@@ -127,48 +186,6 @@ class Google_Gemini_API extends API {
 			$body = array_merge( $body, $override_body );
 		}
 
-		$headers = [
-			'Content-Type' => 'application/json',
-		];
-
-		$response = wp_remote_post(
-			$url,
-			[
-				'timeout' => 300,
-				'headers' => $headers,
-				'body'    => wp_json_encode( $body ),
-			]
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		$body = wp_remote_retrieve_body( $response );
-
-		$data = json_decode( $body, true );
-
-		if ( ! is_array( $data ) || ! isset( $data['candidates'][0] ) ) {
-			return new \WP_Error( 'api_error', 'Error communicating with the Google Gemini API.' . "\n" . print_r( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-		}
-
-		$candidate = $data['candidates'][0];
-
-		// Check for finish reason errors.
-		if ( isset( $candidate['finishReason'] ) && $candidate['finishReason'] === 'MAX_TOKENS' ) {
-			// return new \WP_Error( 'max_tokens_error', 'The response was cut off due to maximum token limit. Please try generating a shorter response or reduce the context size.' );
-		}
-
-		if ( ! isset( $candidate['content']['parts'] ) ) {
-			return new \WP_Error( 'api_error', 'Error communicating with the Google Gemini API.' . "\n" . print_r( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
-		}
-
-		$parts     = $candidate['content']['parts'];
-		$last_part = end( $parts );
-
-		// Extract token usage
-		$this->last_token_usage = $this->extract_token_usage( $data, 'google' );
-
-		return $last_part['text'];
+		return $body;
 	}
 }

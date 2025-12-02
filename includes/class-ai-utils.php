@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * AI helper utilities.
  *
@@ -383,32 +385,39 @@ class AI_Utils {
 	}
 
 	/**
-	 * Remove surrounding triple-backtick code fences from a string.
-	 * If $lang is provided, only removes that language; otherwise tries common types.
+	 * Remove triple-backtick code fences from a string.
+	 * Handles cases where AI adds text before/after the code block.
+	 * If $lang is provided, extracts that language block; otherwise tries common types.
 	 *
 	 * @param string      $content The content possibly wrapped in code fences.
 	 * @param string|null $lang    Optional language (php|css|js|javascript|json).
 	 * @return string
 	 */
-	public static function strip_code_fences( $content, $lang = null ) {
-		$content = (string) $content;
-		if ( $lang ) {
-			$pattern = '/^```(' . preg_quote( $lang, '/' ) . ')\n(.*)\n```$/s';
-			return (string) preg_replace( $pattern, '$2', $content );
-		}
-		// Try common languages.
-		$patterns = [
-			'/^```(php)\n(.*)\n```$/s',
-			'/^```(css)\n(.*)\n```$/s',
-			'/^```(js|javascript)\n(.*)\n```$/s',
-			'/^```(json)\n(.*)\n```$/s',
-		];
-		foreach ( $patterns as $pattern ) {
-			$replaced = preg_replace( $pattern, '$2', $content );
-			if ( $replaced !== null && $replaced !== $content ) {
-				return (string) $replaced;
+	public static function strip_code_fences( string $content, ?string $lang = null ): string {
+		$content = trim( $content );
+
+		// Languages to try (in order of priority).
+		$languages = $lang
+			? [ preg_quote( $lang, '/' ) ]
+			: [ 'php', 'css', 'js', 'javascript', 'json', '' ];
+
+		foreach ( $languages as $try_lang ) {
+			// Pattern that extracts code from anywhere in the content.
+			// Matches: ```lang\n...code...\n``` (with optional text before/after).
+			$lang_pattern = $try_lang ? $try_lang . '\s*' : '';
+			$pattern = '/```' . $lang_pattern . '\r?\n(.*?)\r?\n?```/s';
+
+			if ( preg_match( $pattern, $content, $matches ) ) {
+				return trim( $matches[1] );
 			}
 		}
+
+		// Fallback: try to match generic ``` blocks without language specifier.
+		if ( preg_match( '/```\r?\n(.*?)\r?\n?```/s', $content, $matches ) ) {
+			return trim( $matches[1] );
+		}
+
+		// No code fences found, return original (trimmed).
 		return $content;
 	}
 }

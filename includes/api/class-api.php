@@ -1,10 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Main API class.
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 1.0.5
+ * @version 2.0.0
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
@@ -17,96 +20,89 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * API class.
+ * Base API class for all API providers.
  */
-class API {
+abstract class API {
 
 	/**
 	 * API key.
-	 *
-	 * @var string
 	 */
-	protected $api_key;
+	protected string $api_key = '';
 
 	/**
 	 * Last API response token usage.
 	 *
-	 * @var array
+	 * @var array{input_tokens: int, output_tokens: int}
 	 */
-	protected $last_token_usage = [];
+	protected array $last_token_usage = [
+		'input_tokens'  => 0,
+		'output_tokens' => 0,
+	];
 
 	/**
 	 * Set the API key.
-	 *
-	 * @param string $api_key The API key.
 	 */
-	public function set_api_key( $api_key ) {
+	public function set_api_key( string $api_key ): void {
 		$this->api_key = sanitize_text_field( $api_key );
 	}
 
 	/**
 	 * Get the last API response token usage.
 	 *
-	 * @return array Token usage data with 'input_tokens' and 'output_tokens' keys.
+	 * @return array{input_tokens: int, output_tokens: int} Token usage data.
 	 */
-	public function get_last_token_usage() {
+	public function get_last_token_usage(): array {
 		return $this->last_token_usage;
 	}
+
+	/**
+	 * Send a prompt to the API.
+	 *
+	 * @param string $prompt        The prompt to send.
+	 * @param string $system_message Optional system message.
+	 * @param array  $override_body  Optional body overrides.
+	 * @return string|\WP_Error The response content or error.
+	 */
+	abstract public function send_prompt(
+		string $prompt,
+		string $system_message = '',
+		array $override_body = []
+	): string|\WP_Error;
+
+	/**
+	 * Set the model to use.
+	 */
+	abstract public function set_model( string $model ): void;
 
 	/**
 	 * Extract and normalize token usage from API response.
 	 *
 	 * @param array  $response The API response data.
 	 * @param string $provider The API provider name.
-	 * @return array Normalized token usage with 'input_tokens' and 'output_tokens'.
+	 * @return array{input_tokens: int, output_tokens: int} Normalized token usage.
 	 */
-	protected function extract_token_usage( $response, $provider ) {
-		$usage = [
+	protected function extract_token_usage( array $response, string $provider ): array {
+		$default_usage = [
 			'input_tokens'  => 0,
 			'output_tokens' => 0,
 		];
 
-		if ( ! is_array( $response ) ) {
-			return $usage;
-		}
-
-		switch ( $provider ) {
-			case 'anthropic':
-				if ( isset( $response['usage']['input_tokens'] ) ) {
-					$usage['input_tokens'] = (int) $response['usage']['input_tokens'];
-				}
-				if ( isset( $response['usage']['output_tokens'] ) ) {
-					$usage['output_tokens'] = (int) $response['usage']['output_tokens'];
-				}
-				break;
-
-			case 'google':
-				if ( isset( $response['usageMetadata']['promptTokenCount'] ) ) {
-					$usage['input_tokens'] = (int) $response['usageMetadata']['promptTokenCount'];
-				}
-				if ( isset( $response['usageMetadata']['candidatesTokenCount'] ) ) {
-					$usage['output_tokens'] = (int) $response['usageMetadata']['candidatesTokenCount'];
-				}
-				break;
-
-			case 'openai':
-			case 'xai':
-			case 'custom':
-				// Check for both naming conventions
-				if ( isset( $response['usage']['prompt_tokens'] ) ) {
-					$usage['input_tokens'] = (int) $response['usage']['prompt_tokens'];
-				} elseif ( isset( $response['usage']['input_tokens'] ) ) {
-					$usage['input_tokens'] = (int) $response['usage']['input_tokens'];
-				}
-
-				if ( isset( $response['usage']['completion_tokens'] ) ) {
-					$usage['output_tokens'] = (int) $response['usage']['completion_tokens'];
-				} elseif ( isset( $response['usage']['output_tokens'] ) ) {
-					$usage['output_tokens'] = (int) $response['usage']['output_tokens'];
-				}
-				break;
-		}
-
-		return $usage;
+		return match ( $provider ) {
+			'anthropic' => [
+				'input_tokens'  => (int) ( $response['usage']['input_tokens'] ?? 0 ),
+				'output_tokens' => (int) ( $response['usage']['output_tokens'] ?? 0 ),
+			],
+			'google' => [
+				'input_tokens'  => (int) ( $response['usageMetadata']['promptTokenCount'] ?? 0 ),
+				'output_tokens' => (int) ( $response['usageMetadata']['candidatesTokenCount'] ?? 0 ),
+			],
+			'openai', 'xai', 'openrouter', 'custom' => [
+				'input_tokens'  => (int) ( $response['usage']['prompt_tokens']
+					?? $response['usage']['input_tokens'] ?? 0 ),
+				'output_tokens' => (int) ( $response['usage']['completion_tokens']
+					?? $response['usage']['output_tokens'] ?? 0 ),
+			],
+			default => $default_usage,
+		};
 	}
 }

@@ -1,8 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * WP-Autoplugin Admin AJAX class.
  *
  * @package WP-Autoplugin
+ * @since 1.0.0
+ * @version 2.0.0
+ * @link https://wp-autoplugin.com
+ * @license GPL-2.0+
+ * @license https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 namespace WP_Autoplugin\Admin;
@@ -23,26 +31,38 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class that handles all AJAX requests.
  */
 class Ajax {
+
 	/**
 	 * The Admin object for accessing specialized model APIs.
-	 *
-	 * @var \WP_Autoplugin\Admin
 	 */
-	private $admin;
+	private readonly Admin $admin;
 
 	/**
 	 * AJAX handlers.
 	 *
-	 * @var array
+	 * @var array<string, object>
 	 */
-	private $handlers = [];
+	private array $handlers = [];
+
+	/**
+	 * Action mappings for registration.
+	 *
+	 * @var array<string, array<int, string>>
+	 */
+	private const ACTION_MAPPINGS = [
+		'generator'      => [ 'generate_plan', 'generate_code', 'generate_file', 'review_code', 'create_plugin' ],
+		'fixer'          => [ 'generate_fix_plan', 'generate_fix_code', 'fix_plugin', 'generate_fix_file' ],
+		'extender'       => [ 'generate_extend_plan', 'generate_extend_code', 'extend_plugin', 'generate_extend_file' ],
+		'hooks_extender' => [ 'extract_hooks', 'generate_extend_hooks_plan', 'generate_extend_hooks_code', 'generate_extend_hooks_file' ],
+		'theme_extender' => [ 'extract_theme_hooks', 'generate_extend_theme_plan', 'generate_extend_theme_code', 'generate_extend_theme_file' ],
+		'explainer'      => [ 'explain_plugin' ],
+		'model'          => [ 'add_model', 'remove_model', 'change_model', 'change_models' ],
+	];
 
 	/**
 	 * Constructor sets the Admin instance and hooks into AJAX actions.
-	 *
-	 * @param \WP_Autoplugin\Admin $admin The Admin instance.
 	 */
-	public function __construct( $admin ) {
+	public function __construct( Admin $admin ) {
 		$this->admin = $admin;
 
 		$this->init_handlers();
@@ -52,7 +72,7 @@ class Ajax {
 	/**
 	 * Initialize AJAX handlers.
 	 */
-	private function init_handlers() {
+	private function init_handlers(): void {
 		$this->handlers = [
 			'generator'      => new Generator( $this->admin ),
 			'fixer'          => new Fixer( $this->admin ),
@@ -67,18 +87,8 @@ class Ajax {
 	/**
 	 * Register all needed AJAX actions.
 	 */
-	private function register_actions() {
-		$actions = [
-			'generator'      => [ 'generate_plan', 'generate_code', 'generate_file', 'review_code', 'create_plugin' ],
-			'fixer'          => [ 'generate_fix_plan', 'generate_fix_code', 'fix_plugin', 'generate_fix_file' ],
-			'extender'       => [ 'generate_extend_plan', 'generate_extend_code', 'extend_plugin', 'generate_extend_file' ],
-			'hooks_extender' => [ 'extract_hooks', 'generate_extend_hooks_plan', 'generate_extend_hooks_code', 'generate_extend_hooks_file' ],
-			'theme_extender' => [ 'extract_theme_hooks', 'generate_extend_theme_plan', 'generate_extend_theme_code', 'generate_extend_theme_file' ],
-			'explainer'      => [ 'explain_plugin' ],
-			'model'          => [ 'add_model', 'remove_model', 'change_model', 'change_models' ],
-		];
-
-		foreach ( $actions as $handler_key => $methods ) {
+	private function register_actions(): void {
+		foreach ( self::ACTION_MAPPINGS as $methods ) {
 			foreach ( $methods as $method ) {
 				add_action( 'wp_ajax_wp_autoplugin_' . $method, [ $this, 'ajax_actions' ] );
 			}
@@ -87,10 +97,8 @@ class Ajax {
 
 	/**
 	 * Catch-all AJAX entry point that routes to the relevant method.
-	 *
-	 * @return void
 	 */
-	public function ajax_actions() {
+	public function ajax_actions(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) );
 		}
@@ -98,15 +106,9 @@ class Ajax {
 		$action_input = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
 		$method_name  = str_replace( 'wp_autoplugin_', '', $action_input );
 
-		$target_handler = null;
-		foreach ( $this->handlers as $handler ) {
-			if ( method_exists( $handler, $method_name ) ) {
-				$target_handler = $handler;
-				break;
-			}
-		}
+		$target_handler = $this->find_handler_for_method( $method_name );
 
-		if ( ! $target_handler ) {
+		if ( $target_handler === null ) {
 			wp_send_json_error( esc_html__( 'Invalid AJAX action.', 'wp-autoplugin' ) );
 		}
 
@@ -117,16 +119,26 @@ class Ajax {
 		}
 
 		$target_handler->$method_name();
-		return;
+		exit;
+	}
+
+	/**
+	 * Find the handler that has the given method.
+	 */
+	private function find_handler_for_method( string $method_name ): ?object {
+		foreach ( $this->handlers as $handler ) {
+			if ( method_exists( $handler, $method_name ) ) {
+				return $handler;
+			}
+		}
+
+		return null;
 	}
 
 	/**
 	 * Determine whether the shared generation nonce should be verified for a handler.
-	 *
-	 * @param object $handler The matched handler instance.
-	 * @return bool
 	 */
-	private function should_verify_shared_nonce( $handler ) {
+	private function should_verify_shared_nonce( object $handler ): bool {
 		return ! ( $handler instanceof Model );
 	}
 }

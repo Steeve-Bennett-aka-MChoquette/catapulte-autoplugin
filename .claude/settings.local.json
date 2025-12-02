@@ -6,7 +6,14 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "WebFetch(domain:openrouter.ai)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(dir /s:*)",
+      "Bash(tree:*)",
+      "Bash(xargs ls:*)",
+      "Bash(find:*)",
+      "Bash(composer dump-autoload:*)",
+      "Bash(where:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []
