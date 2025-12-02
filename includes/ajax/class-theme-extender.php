@@ -5,9 +5,13 @@ declare(strict_types=1);
  * WP-Autoplugin AJAX Theme Extender class.
  *
  * @package WP-Autoplugin
+ * @since 1.5
+ * @version 2.0.1
  */
 
 namespace WP_Autoplugin\Ajax;
+
+use WP_Autoplugin\Admin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,17 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Theme_Extender {
 	/**
 	 * The Admin object for accessing specialized model APIs.
-	 *
-	 * @var \WP_Autoplugin\Admin\Admin
 	 */
-	private $admin;
+	private readonly Admin $admin;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \WP_Autoplugin\Admin\Admin $admin The admin instance.
+	 * @param Admin $admin The admin instance.
 	 */
-	public function __construct( $admin ) {
+	public function __construct( Admin $admin ) {
 		$this->admin = $admin;
 	}
 

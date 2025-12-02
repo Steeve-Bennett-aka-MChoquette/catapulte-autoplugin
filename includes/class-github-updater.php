@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * This is a modified version of the WP_GitHub_Updater class originally created by Joachim Kudish.
  *
- * @version 1.8
+ * @version 2.0.1
  * @author WP-Autoplugin
  * @link https://wp-autoplugin.com
  * @package WP-Autoplugin

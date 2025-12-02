@@ -5,6 +5,8 @@ declare(strict_types=1);
  * WP-Autoplugin Admin Scripts class.
  *
  * @package WP-Autoplugin
+ * @since 1.0.0
+ * @version 2.0.1
  */
 
 namespace WP_Autoplugin\Admin;
@@ -17,6 +19,26 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class that enqueues admin scripts and styles.
  */
 class Scripts {
+
+	/**
+	 * Safely validate and check if a plugin is active.
+	 *
+	 * @param string $plugin_file The plugin file path from GET parameter.
+	 * @return bool Whether the plugin is active.
+	 */
+	private function is_plugin_active_safe( string $plugin_file ): bool {
+		// Sanitize and constrain plugin path inside plugins directory.
+		$plugin_file  = ltrim( str_replace( [ '..\\', '../', '\\' ], '/', $plugin_file ), '/' );
+		$plugin_path  = wp_normalize_path( WP_PLUGIN_DIR . '/' . $plugin_file );
+		$plugins_base = wp_normalize_path( trailingslashit( WP_PLUGIN_DIR ) );
+
+		// Verify the path is within the plugins directory.
+		if ( strpos( $plugin_path, $plugins_base ) !== 0 || ! file_exists( $plugin_path ) ) {
+			return false;
+		}
+
+		return is_plugin_active( $plugin_file );
+	}
 
 	/**
 	 * Constructor hooks for scripts and inline CSS.
@@ -158,8 +180,7 @@ class Scripts {
 			$is_plugin_active = false;
 			if ( isset( $_GET['plugin'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
 				$plugin_file      = sanitize_text_field( wp_unslash( $_GET['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
-				$plugin_file      = str_replace( '../', '', $plugin_file );
-				$is_plugin_active = is_plugin_active( $plugin_file );
+				$is_plugin_active = $this->is_plugin_active_safe( $plugin_file );
 			}
 
 			wp_enqueue_script(
@@ -198,8 +219,7 @@ class Scripts {
 			$is_plugin_active = false;
 			if ( isset( $_GET['plugin'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
 				$plugin_file      = sanitize_text_field( wp_unslash( $_GET['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
-				$plugin_file      = str_replace( '../', '', $plugin_file );
-				$is_plugin_active = is_plugin_active( $plugin_file );
+				$is_plugin_active = $this->is_plugin_active_safe( $plugin_file );
 			}
 
 			wp_enqueue_script(
@@ -269,8 +289,7 @@ class Scripts {
 			$is_plugin_active = false;
 			if ( isset( $_GET['plugin'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
 				$plugin_file      = sanitize_text_field( wp_unslash( $_GET['plugin'] ) ); // phpcs:ignore WordPress.Security.NonceVerification -- Nonce verification is not needed here.
-				$plugin_file      = str_replace( '../', '', $plugin_file );
-				$is_plugin_active = is_plugin_active( $plugin_file );
+				$is_plugin_active = $this->is_plugin_active_safe( $plugin_file );
 			}
 
 			wp_enqueue_script(

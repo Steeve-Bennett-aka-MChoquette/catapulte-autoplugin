@@ -7,11 +7,12 @@ declare(strict_types=1);
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 2.0.0
+ * @version 2.0.1
  */
 
 namespace WP_Autoplugin\Ajax;
 
+use WP_Autoplugin\Admin\Admin;
 use WP_Autoplugin\Plugin_Generator;
 use WP_Autoplugin\Plugin_Installer;
 use WP_Autoplugin\AI_Utils;
@@ -26,17 +27,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Generator {
 	/**
 	 * The Admin object for accessing specialized model APIs.
-	 *
-	 * @var \WP_Autoplugin\Admin\Admin
 	 */
-	private $admin;
+	private readonly Admin $admin;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \WP_Autoplugin\Admin\Admin $admin The admin instance.
+	 * @param Admin $admin The admin instance.
 	 */
-	public function __construct( $admin ) {
+	public function __construct( Admin $admin ) {
 		$this->admin = $admin;
 	}
 
@@ -123,8 +122,13 @@ class Generator {
 		$project_structure_array = json_decode( $project_structure, true );
 		$generated_files_array   = json_decode( $generated_files, true );
 
-		if ( ! $plugin_plan_array || ! $project_structure_array || ! isset( $project_structure_array['files'] ) ) {
+		if ( ! is_array( $plugin_plan_array ) || ! is_array( $project_structure_array ) || ! isset( $project_structure_array['files'] ) ) {
 			wp_send_json_error( esc_html__( 'Invalid input data.', 'wp-autoplugin' ) );
+		}
+
+		// Ensure generated_files_array is an array (can be empty on first file).
+		if ( ! is_array( $generated_files_array ) ) {
+			$generated_files_array = [];
 		}
 
 		$files = $project_structure_array['files'];
@@ -135,7 +139,7 @@ class Generator {
 		$file_info    = $files[ $file_index ];
 		$coder_api    = $this->admin->api_handler->get_coder_api();
 		$generator    = new Plugin_Generator( $coder_api );
-		$file_content = $generator->generate_plugin_file( $file_info, wp_json_encode( $plugin_plan_array ), $project_structure_array, $generated_files_array );
+		$file_content = $generator->generate_plugin_file( $file_info, (string) wp_json_encode( $plugin_plan_array ), $project_structure_array, $generated_files_array );
 
 		if ( is_wp_error( $file_content ) ) {
 			wp_send_json_error( $file_content->get_error_message() );

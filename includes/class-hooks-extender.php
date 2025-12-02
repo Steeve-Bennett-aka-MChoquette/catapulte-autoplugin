@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 1.4
+ * @version 2.0.1
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html

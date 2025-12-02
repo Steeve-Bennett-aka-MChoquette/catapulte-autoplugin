@@ -6,7 +6,7 @@ declare(strict_types=1);
  *
  * @package WP-Autoplugin
  * @since 1.0.0
- * @version 1.0.5
+ * @version 2.0.1
  * @link https://wp-autoplugin.com
  * @license GPL-2.0+
  * @license https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,28 +25,27 @@ class Plugin_Generator {
 
 	/**
 	 * AI API in use.
-	 *
-	 * @var API
 	 */
-	private $ai_api;
+	private readonly API $ai_api;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param API $ai_api The AI API in use.
 	 */
-	public function __construct( $ai_api ) {
+	public function __construct( API $ai_api ) {
 		$this->ai_api = $ai_api;
 	}
 
 	/**
 	 * Prompt the AI to generate a plan for a WordPress plugin.
 	 *
-	 * @param string $input The plugin features.
+	 * @param string $input         The plugin features.
+	 * @param array  $prompt_images Optional images for multimodal prompts.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	public function generate_plugin_plan( $input, $prompt_images = [] ) {
+	public function generate_plugin_plan( string $input, array $prompt_images = [] ): string|\WP_Error {
 		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
@@ -59,11 +58,12 @@ class Plugin_Generator {
 	/**
 	 * Generate a plan for a simple single-file plugin.
 	 *
-	 * @param string $input The plugin features.
+	 * @param string $input         The plugin features.
+	 * @param array  $prompt_images Optional images for multimodal prompts.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	private function generate_simple_plugin_plan( $input, $prompt_images = [] ) {
+	private function generate_simple_plugin_plan( string $input, array $prompt_images = [] ): string|\WP_Error {
 		$prompt = <<<PROMPT
 			Generate a detailed technical specification and development plan for a WordPress plugin with the following features:
 
@@ -95,11 +95,12 @@ class Plugin_Generator {
 	/**
 	 * Generate a plan for a complex multi-file plugin.
 	 *
-	 * @param string $input The plugin features.
+	 * @param string $input         The plugin features.
+	 * @param array  $prompt_images Optional images for multimodal prompts.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	private function generate_complex_plugin_plan( $input, $prompt_images = [] ) {
+	private function generate_complex_plugin_plan( string $input, array $prompt_images = [] ): string|\WP_Error {
 		$prompt = <<<PROMPT
 			Generate a detailed technical specification and development plan for a WordPress plugin with the following features:
 			
@@ -149,9 +150,9 @@ class Plugin_Generator {
 	 *
 	 * @param string $plan The plugin plan.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	public function generate_plugin_code( $plan ) {
+	public function generate_plugin_code( string $plan ): string|\WP_Error {
 		$plugin_mode = get_option( 'wp_autoplugin_plugin_mode', 'simple' );
 
 		if ( 'complex' === $plugin_mode ) {
@@ -176,14 +177,14 @@ class Plugin_Generator {
 	/**
 	 * Generate a single file for a complex plugin.
 	 *
-	 * @param array  $file_info The file information from project structure.
-	 * @param string $plan The complete plugin plan.
+	 * @param array  $file_info         The file information from project structure.
+	 * @param string $plan              The complete plugin plan.
 	 * @param array  $project_structure The complete project structure.
-	 * @param array  $generated_files Previously generated files.
+	 * @param array  $generated_files   Previously generated files.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	public function generate_plugin_file( $file_info, $plan, $project_structure, $generated_files = [] ) {
+	public function generate_plugin_file( array $file_info, string $plan, array $project_structure, array $generated_files = [] ): string|\WP_Error {
 		$file_type        = $file_info['type'];
 		$file_path        = $file_info['path'];
 		$file_description = $file_info['description'];
@@ -204,14 +205,14 @@ class Plugin_Generator {
 	/**
 	 * Generate a PHP file for the complex plugin.
 	 *
-	 * @param string $file_path The file path.
+	 * @param string $file_path        The file path.
 	 * @param string $file_description The file description.
-	 * @param string $plan The plugin plan.
-	 * @param string $context The context of other files.
+	 * @param string $plan             The plugin plan.
+	 * @param string $context          The context of other files.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	private function generate_php_file( $file_path, $file_description, $plan, $context ) {
+	private function generate_php_file( string $file_path, string $file_description, string $plan, string $context ): string|\WP_Error {
 		$is_main_file = basename( $file_path ) === basename( $file_path, '.php' ) . '.php' && ! strpos( $file_path, '/' );
 
 		$prompt = <<<PROMPT
@@ -251,14 +252,14 @@ class Plugin_Generator {
 	/**
 	 * Generate a CSS file for the complex plugin.
 	 *
-	 * @param string $file_path The file path.
+	 * @param string $file_path        The file path.
 	 * @param string $file_description The file description.
-	 * @param string $plan The plugin plan.
-	 * @param string $context The context of other files.
+	 * @param string $plan             The plugin plan.
+	 * @param string $context          The context of other files.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	private function generate_css_file( $file_path, $file_description, $plan, $context ) {
+	private function generate_css_file( string $file_path, string $file_description, string $plan, string $context ): string|\WP_Error {
 		$prompt = <<<PROMPT
 			Generate a CSS file for a WordPress plugin with the following specifications:
 
@@ -288,14 +289,14 @@ class Plugin_Generator {
 	/**
 	 * Generate a JavaScript file for the complex plugin.
 	 *
-	 * @param string $file_path The file path.
+	 * @param string $file_path        The file path.
 	 * @param string $file_description The file description.
-	 * @param string $plan The plugin plan.
-	 * @param string $context The context of other files.
+	 * @param string $plan             The plugin plan.
+	 * @param string $context          The context of other files.
 	 *
-	 * @return string|WP_Error
+	 * @return string|\WP_Error
 	 */
-	private function generate_js_file( $file_path, $file_description, $plan, $context ) {
+	private function generate_js_file( string $file_path, string $file_description, string $plan, string $context ): string|\WP_Error {
 		$prompt = <<<PROMPT
 			Generate a JavaScript file for a WordPress plugin with the following specifications:
 
@@ -326,12 +327,12 @@ class Plugin_Generator {
 	/**
 	 * Build context string from generated files and project structure.
 	 *
-	 * @param array $generated_files Previously generated files.
+	 * @param array $generated_files   Previously generated files.
 	 * @param array $project_structure The project structure.
 	 *
 	 * @return string
 	 */
-	private function build_file_context( $generated_files, $project_structure ) {
+	private function build_file_context( array $generated_files, array $project_structure ): string {
 		$context = "Project Structure:\n";
 
 		if ( isset( $project_structure['directories'] ) ) {
@@ -375,13 +376,13 @@ class Plugin_Generator {
 	/**
 	 * Review the complete generated codebase and suggest improvements.
 	 *
-	 * @param string $plugin_plan The original plugin plan.
+	 * @param string $plugin_plan       The original plugin plan.
 	 * @param array  $project_structure The project structure.
-	 * @param array  $generated_files All generated files.
+	 * @param array  $generated_files   All generated files.
 	 *
-	 * @return string|WP_Error JSON response with suggested updates/additions.
+	 * @return string|\WP_Error JSON response with suggested updates/additions.
 	 */
-	public function review_generated_code( $plugin_plan, $project_structure, $generated_files ) {
+	public function review_generated_code( string $plugin_plan, array $project_structure, array $generated_files ): string|\WP_Error {
 		$context = $this->build_file_context( $generated_files, $project_structure );
 
 		$prompt = <<<PROMPT

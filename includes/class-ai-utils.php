@@ -128,9 +128,9 @@ class AI_Utils {
 	 * @param string $system_message Optional system prompt.
 	 * @return array
 	 */
-	public static function build_openai_multimodal_messages( $prompt, $prompt_images, $system_message = '' ) {
+	public static function build_openai_multimodal_messages( string $prompt, array $prompt_images, string $system_message = '' ): array {
 		$messages = [];
-		if ( ! empty( $system_message ) ) {
+		if ( '' !== $system_message ) {
 			$messages[] = [
 				'role'    => 'system',
 				'content' => $system_message,
@@ -145,9 +145,9 @@ class AI_Utils {
 		];
 
 		foreach ( $prompt_images as $image ) {
-			$mime = isset( $image['mime'] ) ? $image['mime'] : 'image/jpeg';
-			$data = isset( $image['data'] ) ? $image['data'] : '';
-			if ( empty( $data ) ) {
+			$mime = $image['mime'] ?? 'image/jpeg';
+			$data = $image['data'] ?? '';
+			if ( '' === $data ) {
 				continue;
 			}
 
@@ -172,9 +172,8 @@ class AI_Utils {
 	 * @param string $system_message Optional system prompt (handled separately via instructions).
 	 * @return array
 	 */
-	public static function build_openai_responses_multimodal_input( $prompt, $prompt_images, $system_message = '' ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public static function build_openai_responses_multimodal_input( string $prompt, array $prompt_images, string $system_message = '' ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		$content = [];
-		$prompt  = (string) $prompt;
 
 		if ( '' !== $prompt ) {
 			$content[] = [
@@ -184,9 +183,9 @@ class AI_Utils {
 		}
 
 		foreach ( $prompt_images as $image ) {
-			$mime = isset( $image['mime'] ) ? $image['mime'] : 'image/jpeg';
-			$data = isset( $image['data'] ) ? $image['data'] : '';
-			if ( empty( $data ) ) {
+			$mime = $image['mime'] ?? 'image/jpeg';
+			$data = $image['data'] ?? '';
+			if ( '' === $data ) {
 				continue;
 			}
 
@@ -218,13 +217,13 @@ class AI_Utils {
 	 * @param array  $prompt_images Array of parsed prompt images.
 	 * @return array
 	 */
-	public static function build_gemini_multimodal_contents( $prompt, $prompt_images ) {
+	public static function build_gemini_multimodal_contents( string $prompt, array $prompt_images ): array {
 		$parts = [];
 
 		foreach ( $prompt_images as $image ) {
-			$mime = isset( $image['mime'] ) ? $image['mime'] : 'image/jpeg';
-			$data = isset( $image['data'] ) ? $image['data'] : '';
-			if ( empty( $data ) ) {
+			$mime = $image['mime'] ?? 'image/jpeg';
+			$data = $image['data'] ?? '';
+			if ( '' === $data ) {
 				continue;
 			}
 
@@ -254,13 +253,13 @@ class AI_Utils {
 	 * @param array  $prompt_images Array of parsed prompt images.
 	 * @return array
 	 */
-	public static function build_anthropic_multimodal_content( $prompt, $prompt_images ) {
+	public static function build_anthropic_multimodal_content( string $prompt, array $prompt_images ): array {
 		$content = [];
 
 		foreach ( $prompt_images as $image ) {
-			$mime = isset( $image['mime'] ) ? $image['mime'] : 'image/jpeg';
-			$data = isset( $image['data'] ) ? $image['data'] : '';
-			if ( empty( $data ) ) {
+			$mime = $image['mime'] ?? 'image/jpeg';
+			$data = $image['data'] ?? '';
+			if ( '' === $data ) {
 				continue;
 			}
 

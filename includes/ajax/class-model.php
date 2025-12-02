@@ -5,9 +5,13 @@ declare(strict_types=1);
  * WP-Autoplugin AJAX Model class.
  *
  * @package WP-Autoplugin
+ * @since 1.0.0
+ * @version 2.0.1
  */
 
 namespace WP_Autoplugin\Ajax;
+
+use WP_Autoplugin\Admin\Admin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,28 +23,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Model {
 	/**
 	 * The Admin object for accessing specialized model APIs.
-	 *
-	 * @var \WP_Autoplugin\Admin\Admin
 	 */
-	private $admin;
+	private readonly Admin $admin;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \WP_Autoplugin\Admin\Admin $admin The admin instance.
+	 * @param Admin $admin The admin instance.
 	 */
-	public function __construct( $admin ) {
+	public function __construct( Admin $admin ) {
 		$this->admin = $admin;
 	}
 
 	/**
 	 * AJAX handler for adding a custom model.
 	 *
-	 * @return void
+	 * @return never
 	 */
-	public function add_model() {
+	public function add_model(): never {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			exit;
+		}
+
 		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		$model = isset( $_POST['model'] ) && is_array( $_POST['model'] ) ? wp_unslash( $_POST['model'] ) : null; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitization is done later, see below.
@@ -77,11 +85,17 @@ class Model {
 	/**
 	 * AJAX handler for removing a custom model.
 	 *
-	 * @return void
+	 * @return never
 	 */
-	public function remove_model() {
+	public function remove_model(): never {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			exit;
+		}
+
 		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		$models = get_option( 'wp_autoplugin_custom_models', [] );
@@ -111,15 +125,17 @@ class Model {
 	/**
 	 * AJAX handler for updating a custom model.
 	 *
-	 * @return void
+	 * @return never
 	 */
-	public function change_model() {
+	public function change_model(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		$model = isset( $_POST['model'] ) ? sanitize_text_field( wp_unslash( $_POST['model'] ) ) : '';
@@ -162,15 +178,17 @@ class Model {
 	/**
 	 * AJAX handler for changing models used in different contexts.
 	 *
-	 * @return void
+	 * @return never
 	 */
-	public function change_models() {
+	public function change_models(): never {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( [ 'message' => esc_html__( 'You are not allowed to access this page.', 'wp-autoplugin' ) ] );
+			wp_send_json_error( [ 'message' => esc_html__( 'Insufficient permissions.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		if ( ! check_ajax_referer( 'wp_autoplugin_nonce', 'nonce', false ) ) {
 			wp_send_json_error( [ 'message' => esc_html__( 'Security check failed.', 'wp-autoplugin' ) ] );
+			exit;
 		}
 
 		$default_model  = isset( $_POST['default_model'] ) ? sanitize_text_field( wp_unslash( $_POST['default_model'] ) ) : '';
