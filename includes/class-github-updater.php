@@ -226,7 +226,7 @@ class GitHub_Updater {
 
 				if ( ! is_wp_error( $raw_response ) && ! empty( $raw_response['body'] ) ) {
 					preg_match( '#^\s*`*~Current Version\:\s*([^~]*)~#im', $raw_response['body'], $__version );
-					if ( isset( $__version[1] ) && -1 === version_compare( $version, $__version[1] ) ) {
+					if ( isset( $__version[1] ) ) {
 						$version = trim( $__version[1] );
 					}
 				}
@@ -333,7 +333,14 @@ class GitHub_Updater {
 			return $transient;
 		}
 
-		$update = version_compare( $this->config['new_version'], $this->config['version'] );
+		// Ensure we have valid version strings before comparing.
+		$new_version = $this->config['new_version'];
+		$cur_version = $this->config['version'];
+		if ( ! is_string( $new_version ) || '' === $new_version || ! is_string( $cur_version ) || '' === $cur_version ) {
+			return $transient;
+		}
+
+		$update = version_compare( $new_version, $cur_version );
 
 		if ( 1 === (int) $update ) {
 			$response              = new \stdClass();
