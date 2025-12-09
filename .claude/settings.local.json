@@ -19,7 +19,16 @@
       "Bash(del \"J:\\git\\wp-autoplugin-standalone\\wp-autoplugin.php\")",
       "Bash(composer install:*)",
       "Bash(composer update:*)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" status)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" diff)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" log --oneline -5)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" add phpcs.xml)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" commit -m \"$(cat <<''EOF''\nUpdate phpcs.xml: fix text_domain and PHP version\n\n- Change text_domain from wp-autoplugin to catapulte-autoplugin\n- Update testVersion from 7.4- to 8.1- to match plugin requirements\nEOF\n)\")",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" push)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" diff includes/class-github-updater.php)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" add includes/class-github-updater.php)",
+      "Bash(git -C \"J:\\git\\catapulte-autoplugin\" commit -m \"$(cat <<''EOF''\nFix PHP 8.3 TypeError in GitHub Updater version_compare()\n\n- Add validation before version_compare() to ensure string arguments\n- Return early if new_version or version is not a valid string\n- Simplify README version fallback logic\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
